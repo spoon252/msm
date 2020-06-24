@@ -1,13 +1,9 @@
 package msm;
 
-import java.awt.EventQueue;
-import java.sql.Connection;
+import javax.swing.JFrame;
 
-public class Program {
-	/**
-	 * Launch the application.
-	 */
+public class Program extends JFrame {
+
 	public static void main(String[] args) {
-		Connection con=DatabaseConnector.getConnection();
 	}
 }
