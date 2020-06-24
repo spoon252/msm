@@ -49,16 +49,8 @@ public class MsmFrame extends JFrame {
 		tabbedPane.addTab("New tab", null, panel, null);
 		panel.setLayout(null);
 		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(28, 42, 89, 23);
-		panel.add(btnNewButton);
-		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("New tab", null, panel_1, null);
 		panel_1.setLayout(null);
-		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(60, 29, 131, 77);
-		panel_1.add(textArea);
 	}
 }
