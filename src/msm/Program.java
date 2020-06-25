@@ -1,9 +1,18 @@
 package msm;
 
-import javax.swing.JFrame;
+import java.awt.EventQueue;
 
-public class Program extends JFrame {
-
-	public static void main(String[] args) {
+public class Program{
+	public static void main(String[] args) {		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MsmFrame frame = new MsmFrame();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
