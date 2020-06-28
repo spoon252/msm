@@ -1,20 +1,21 @@
 package tableModels;
 
+import java.sql.Date;
 import java.util.Arrays;
-import java.util.List;
+
+import models.Izvodjac;
 import models.Pjesma;
 
-@SuppressWarnings("serial")
-public class PjesmaTable extends RowTableModel<Pjesma> {
+public class IzvodjacTable extends RowTableModel<Izvodjac> {
 
     private static String[] COLUMN_NAMES =
     {
-        "Naziv",
-        "Album",
-        "Trajanje"
+        "Ime",
+        "Prezime",
+        "Tip"
     };
     
-    public PjesmaTable()
+    public IzvodjacTable()
     {
     	super( Arrays.asList(COLUMN_NAMES) );
 		setRowClass( Pjesma.class );
@@ -23,16 +24,16 @@ public class PjesmaTable extends RowTableModel<Pjesma> {
 	@Override
 	public Object getValueAt(int row, int column)
 	{
-		Pjesma pjesma = getRow(row);
+		Izvodjac izvodjac = getRow(row);
 
 		switch (column)
         {
             case 0: 
-            	return pjesma.getNaziv();
+            	return izvodjac.getIme();
             case 1: 
-            	return pjesma.getAlbum();
+            	return izvodjac.getPrezime();
             case 2: 
-            	return pjesma.getTrajanje();
+            	return izvodjac.getTip();
             default: 
             	return null;
         }
@@ -41,18 +42,18 @@ public class PjesmaTable extends RowTableModel<Pjesma> {
 	@Override
 	public void setValueAt(Object value, int row, int column)
 	{
-		Pjesma pjesma = getRow(row);
+		Izvodjac izvodjac = getRow(row);
 
 		switch (column)
         {
             case 0: 
-            	pjesma.setNaziv((String)value); 
+            	izvodjac.setIme((String)value); 
             	break;
             case 1: 
-            	pjesma.setAlbum((String)value);
+            	izvodjac.setPrezime((String)value);
             	break;
             case 2: 
-            	pjesma.setTrajanje((Integer)value); 
+            	izvodjac.setTip((String)value); 
             	break;
         }
 

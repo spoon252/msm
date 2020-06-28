@@ -22,8 +22,10 @@ abstract class RowTableModel<T> extends AbstractTableModel
 {
 	protected List<T> modelData;
 	protected List<String> columnNames;
+	@SuppressWarnings("rawtypes")
 	protected Class[] columnClasses;
 	protected Boolean[] isColumnEditable;
+	@SuppressWarnings("rawtypes")
 	private Class rowClass = Object.class;
 	private boolean isModelEditable = true;
 

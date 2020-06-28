@@ -89,7 +89,6 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 					+" FROM music_studio.pjesma as PJ" 
 					+" JOIN music_studio.album as AL" 
 					+" ON PJ.id_album = AL.id_album";
-			System.out.println("Query: "+ query);
 			PreparedStatement ps=con.prepareStatement(query,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 			ResultSet rs=ps.executeQuery();
 			model.clearData();

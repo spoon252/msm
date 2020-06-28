@@ -5,11 +5,19 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+import models.Izvodjac;
+import models.Pjesma;
+import tableModels.IzvodjacTable;
+import tableModels.PjesmaTable;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,27 +25,38 @@ import javax.swing.JScrollPane;
 import java.awt.Font;
 
 public class PanelIzvodjac extends JPanel implements ComponentListener {
+	private JTable table;
 
 	/**
 	 * Create the panel.
 	 */
-	public PanelIzvodjac() {
-		System.out.println("constructor izvodjac");
-		addComponentListener(this);
-		DefaultTableModel model = new DefaultTableModel(); 
-		//JTableHeader header = table.getTableHeader();
-		//add(header, BorderLayout.NORTH);
-		AddTableHeaders(model);
+	public PanelIzvodjac() throws SQLException {
+		IzvodjacTable model = new IzvodjacTable(); 
 		setLayout(null);
+		addComponentListener(this);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 0, 683, 395);
+		add(scrollPane);
+		table = new JTable(model);
+		scrollPane.setViewportView(table);
+		table.setBounds(10, 0, 672, 413);
+		table.getColumnModel().getColumn(2).setMaxWidth(75);
+		JButton btnNewButton = new JButton("Osvjezi listu");
+		GetPjesme(model);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					GetPjesme(model);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});btnNewButton.setFont(new Font("Tahoma",Font.PLAIN,11));btnNewButton.setBounds(10,403,119,23);
+
+	add(btnNewButton);
 	}
 	
-	private void AddTableHeaders(DefaultTableModel model) {
-		model.addColumn("ID"); 
-		model.addColumn("Album"); 
-		model.addColumn("Naziv"); 
-		model.addColumn("Trajanje"); 
-	}
-
 	@Override
 	public void componentResized(ComponentEvent e) {
 		// TODO Auto-generated method stub
@@ -52,10 +71,23 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 
 	@Override
 	public void componentShown(ComponentEvent e) {
-		System.out.println("izvodjac show");		
 	}
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
 	}
+	
+	public void GetPjesme(IzvodjacTable model) throws SQLException {
+		var con = DatabaseConnector.getConnection(); 
+			String query = "SELECT id_izvodjac, ime, prezime, tip from music_studio.izvodjac";
+			PreparedStatement ps=con.prepareStatement(query,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs=ps.executeQuery();
+			model.clearData();
+			while(rs.next()){
+				Izvodjac izvodjac = new Izvodjac();
+				izvodjac.setValue(rs);
+				model.addRow(izvodjac);
+			}
+			con.close();
+		}
 }
