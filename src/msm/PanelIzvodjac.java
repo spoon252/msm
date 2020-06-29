@@ -41,12 +41,12 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 		scrollPane.setViewportView(table);
 		table.setBounds(10, 0, 672, 413);
 		table.getColumnModel().getColumn(2).setMaxWidth(75);
-		JButton btnNewButton = new JButton("Osvjezi listu");
-		GetPjesme(model);
+		JButton btnNewButton = new JButton("Osvježi listu");
+		GetIzvodjaci(model);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					GetPjesme(model);
+					GetIzvodjaci(model);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -77,7 +77,7 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 	public void componentHidden(ComponentEvent e) {
 	}
 	
-	public void GetPjesme(IzvodjacTable model) throws SQLException {
+	public void GetIzvodjaci(IzvodjacTable model) throws SQLException {
 		var con = DatabaseConnector.getConnection(); 
 			String query = "SELECT id_izvodjac, ime, prezime, tip from music_studio.izvodjac";
 			PreparedStatement ps=con.prepareStatement(query,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);

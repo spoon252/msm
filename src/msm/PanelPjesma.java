@@ -42,7 +42,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		scrollPane.setViewportView(table);
 		table.setBounds(10, 0, 672, 413);
 		table.getColumnModel().getColumn(2).setMaxWidth(75);
-		JButton btnNewButton = new JButton("Osvjezi listu");
+		JButton btnNewButton = new JButton("Osvježi listu");
 		GetPjesme(model);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

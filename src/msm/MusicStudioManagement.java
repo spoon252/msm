@@ -50,6 +50,8 @@ public class MusicStudioManagement extends JFrame{
 		PanelPjesma panelPjesma = new PanelPjesma();
 		tabbedPane.addTab("Pjesme", null, panelPjesma, null);
 		PanelIzvodjac panelIzvodjac = new PanelIzvodjac();
-		tabbedPane.addTab("Izvodjaci", null, panelIzvodjac, null);
-	}
+		tabbedPane.addTab("Izvođači", null, panelIzvodjac, null);
+		PanelAlbum panelAlbum = new PanelAlbum();
+		tabbedPane.addTab("Albumi", null, panelAlbum, null);
+		}
 }

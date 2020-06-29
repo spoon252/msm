@@ -39,6 +39,7 @@ public class IzvodjacTable extends RowTableModel<Izvodjac> {
         }
 	}
 
+
 	@Override
 	public void setValueAt(Object value, int row, int column)
 	{
