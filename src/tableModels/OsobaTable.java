@@ -3,37 +3,36 @@ package tableModels;
 import java.sql.Date;
 import java.util.Arrays;
 
-import models.Izvodjac;
-import models.Pjesma;
+import models.Osoba;
 
-public class IzvodjacTable extends RowTableModel<Izvodjac> {
+public class OsobaTable extends RowTableModel<Osoba> {
 
     private static String[] COLUMN_NAMES =
     {
         "Ime",
         "Prezime",
-        "Tip"
+        "Datum rođenja"
     };
     
-    public IzvodjacTable()
+    public OsobaTable()
     {
     	super( Arrays.asList(COLUMN_NAMES) );
-		setRowClass( Izvodjac.class );
+		setRowClass( Osoba.class );
     }
     
 	@Override
 	public Object getValueAt(int row, int column)
 	{
-		Izvodjac izvodjac = getRow(row);
+		Osoba osoba = getRow(row);
 
 		switch (column)
         {
             case 0: 
-            	return izvodjac.getIme();
+            	return osoba.getIme();
             case 1: 
-            	return izvodjac.getPrezime();
+            	return osoba.getPrezime();
             case 2: 
-            	return izvodjac.getTip();
+            	return osoba.getDatumRodjenja();
             default: 
             	return null;
         }
@@ -43,18 +42,18 @@ public class IzvodjacTable extends RowTableModel<Izvodjac> {
 	@Override
 	public void setValueAt(Object value, int row, int column)
 	{
-		Izvodjac izvodjac = getRow(row);
+		Osoba osoba = getRow(row);
 
 		switch (column)
         {
             case 0: 
-            	izvodjac.setIme((String)value); 
+            	osoba.setIme((String)value); 
             	break;
             case 1: 
-            	izvodjac.setPrezime((String)value);
+            	osoba.setPrezime((String)value);
             	break;
             case 2: 
-            	izvodjac.setTip((String)value); 
+            	osoba.setDatumRodjenja((Date)value);
             	break;
         }
 

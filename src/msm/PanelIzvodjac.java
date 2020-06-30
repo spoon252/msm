@@ -41,20 +41,7 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 		scrollPane.setViewportView(table);
 		table.setBounds(10, 0, 672, 413);
 		table.getColumnModel().getColumn(2).setMaxWidth(75);
-		JButton btnNewButton = new JButton("Osvježi listu");
 		GetIzvodjaci(model);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					GetIzvodjaci(model);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});btnNewButton.setFont(new Font("Tahoma",Font.PLAIN,11));btnNewButton.setBounds(10,403,119,23);
-
-	add(btnNewButton);
 	}
 	
 	@Override
