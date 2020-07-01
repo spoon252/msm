@@ -35,12 +35,12 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 		setLayout(null);
 		addComponentListener(this);
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 683, 395);
+		scrollPane.setBounds(10, 11, 382, 366);
 		add(scrollPane);
 		table = new JTable(model);
 		scrollPane.setViewportView(table);
 		table.setBounds(10, 0, 672, 413);
-		table.getColumnModel().getColumn(2).setMaxWidth(75);
+		table.getColumnModel().getColumn(2).setMaxWidth(95);
 		GetIzvodjaci(model);
 	}
 	

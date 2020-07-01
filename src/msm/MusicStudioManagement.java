@@ -44,14 +44,16 @@ public class MusicStudioManagement extends JFrame{
 		contentPane.setLayout(null);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(5, 5, 780, 450);
+		tabbedPane.setBounds(10, 5, 775, 455);
 		contentPane.add(tabbedPane);
 		
 		PanelPjesma panelPjesma = new PanelPjesma();
 		tabbedPane.addTab("Pjesme", null, panelPjesma, null);
-		PanelIzvodjac panelIzvodjac = new PanelIzvodjac();
-		tabbedPane.addTab("Izvođači", null, panelIzvodjac, null);
 		PanelAlbum panelAlbum = new PanelAlbum();
 		tabbedPane.addTab("Albumi", null, panelAlbum, null);
+		PanelIzvodjac panelIzvodjac = new PanelIzvodjac();
+		tabbedPane.addTab("Izvođači", null, panelIzvodjac, null);
+		PanelOsoba panelOsoba = new PanelOsoba();
+		tabbedPane.addTab("Osobe", null, panelOsoba, null);
 		}
 }

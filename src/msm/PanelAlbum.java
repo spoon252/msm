@@ -71,6 +71,8 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		add(lblNewLabel);
 
 		JList<String> list = new JList<String>(list_model);
+		list.setForeground(Color.BLACK);
+		list.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		list.setBorder(new LineBorder(UIManager.getColor("Button.darkShadow")));
 		list.setBackground(UIManager.getColor("Button.background"));
 		list.setBounds(484, 34, 145, 144);
