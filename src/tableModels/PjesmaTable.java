@@ -52,7 +52,7 @@ public class PjesmaTable extends RowTableModel<Pjesma> {
             	pjesma.setAlbum((String)value);
             	break;
             case 2: 
-            	pjesma.setTrajanje((Integer)value); 
+            	pjesma.setTrajanje((String)value); 
             	break;
         }
 
