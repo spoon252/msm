@@ -1,7 +1,13 @@
 package models;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import msm.DatabaseConnector;
+import tableModels.AlbumTable;
 
 public class Album {
 	public int idAlbum;
@@ -42,11 +48,25 @@ public class Album {
 			e.printStackTrace();
 		}
 	}
-
 	
 	public String toString() {
-		return this.idAlbum +" "+this.naziv + " " + this.godina;
-				
+		return this.idAlbum +" "+this.naziv + " " + this.godina;				
 	}
+	
+	public List<Album> GetAlbumi(AlbumTable model) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "SELECT id_album, naziv, godina from music_studio.album";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ResultSet rs = ps.executeQuery();
+		List<Album> albumi = new ArrayList<Album>();
+		while (rs.next()) {
+			Album album = new Album();
+			album.setValue(rs);
+			albumi.add(album);
+		}
+		con.close();
+		return albumi;
+	}
+	
 
 }

@@ -98,21 +98,7 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 	public void loadAdditionalInfo() throws SQLException {
 		int selected = model.getRow(table_albumi.getSelectedRow()).getIdAlbum();
 		GetIzvodjaciForAlbum(list_model, selected);
-		GetPjesmeForAlbum(pjesma_model, selected);
-	}
-
-	public void GetAlbumi(AlbumTable model) throws SQLException {
-		var con = DatabaseConnector.getConnection();
-		String query = "SELECT id_album, naziv, godina from music_studio.album";
-		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet rs = ps.executeQuery();
-		model.clearData();
-		while (rs.next()) {
-			Album album = new Album();
-			album.setValue(rs);
-			model.addRow(album);
-		}
-		con.close();
+		Pjesma.GetPjesmeForAlbum(selected);
 	}
 
 	public void GetIzvodjaciForAlbum(DefaultListModel<String> list_model, int id) throws SQLException {
@@ -134,22 +120,6 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 			else
 				list_model.addElement(izvodjac.getIme());
 
-		}
-		con.close();
-	}
-
-	public void GetPjesmeForAlbum(PjesmaTable model, int id) throws SQLException {
-		var con = DatabaseConnector.getConnection();
-		String query = "SELECT id_pjesma" + ",id_album" + ",naziv" + ",trajanje" + " FROM music_studio.pjesma"
-				+ " WHERE id_pjesma = ?";
-		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ps.setInt(1, id);
-		ResultSet rs = ps.executeQuery();
-		model.clearData();
-		while (rs.next()) {
-			Pjesma pjesma = new Pjesma();
-			pjesma.setValue(rs);
-			model.addRow(pjesma);
 		}
 		con.close();
 	}

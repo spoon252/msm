@@ -21,7 +21,7 @@ public class MusicStudioManagement extends JFrame{
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
+				try { 
 					MusicStudioManagement frame = new MusicStudioManagement();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -29,7 +29,7 @@ public class MusicStudioManagement extends JFrame{
 				}
 			}
 		});
-	}
+	} 
 
 	/**
 	 * Create the frame.

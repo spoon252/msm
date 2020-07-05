@@ -80,4 +80,21 @@ public class Pjesma {
 		con.close();
 		return pjesme;
 	}
+	
+	public static List<Pjesma> GetPjesmeForAlbum(int id) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "SELECT id_pjesma" + ",id_album" + ",naziv" + ",trajanje" + " FROM music_studio.pjesma"
+				+ " WHERE id_pjesma = ?";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		List<Pjesma> pjesme = new ArrayList<Pjesma>();
+		while (rs.next()) {
+			Pjesma pjesma = new Pjesma();
+			pjesma.setValue(rs);
+			pjesme.add(pjesma);
+		}
+		con.close();
+		return pjesme;
+	}
 }
