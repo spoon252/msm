@@ -1,10 +1,13 @@
 package dialogs;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -14,15 +17,17 @@ import models.Album;
 import models.Pjesma;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
-
 public class pjesmaDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -37,11 +42,14 @@ public class pjesmaDialog extends JDialog {
 	/***
 	 * 
 	 * @param pjesma Input argument
+	 * @throws SQLException 
 	 */
-	public pjesmaDialog(Pjesma pjesma) {	
+	public pjesmaDialog(Pjesma pjesma) throws SQLException {	
 		if(pjesma != null)
 			this._pjesma = pjesma;
-		setBounds(100, 100, 333, 232);
+		albumi = Album.GetAlbumi();
+		setSize(333, 232);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -67,13 +75,20 @@ public class pjesmaDialog extends JDialog {
 		lblSpot.setBounds(66, 118, 63, 14);
 		contentPanel.add(lblSpot);
 
-		JComboBox comboAlbumi = new JComboBox();
+		JComboBox comboAlbumi = new JComboBox(new DefaultComboBoxModel(albumi.toArray()));
 		comboAlbumi.setBounds(139, 83, 127, 22);
 		contentPanel.add(comboAlbumi);
-
-		JComboBox comboSpot = new JComboBox();
-		comboSpot.setBounds(139, 115, 127, 22);
-		contentPanel.add(comboSpot);
+		comboAlbumi.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if(value instanceof Album){
+                	Album album = (Album) value;
+                    setText(album.getNaziv());
+                }
+                return this;
+            }
+        } );
 
 		txtNaziv = new JTextField();
 		txtNaziv.setBounds(139, 21, 127, 20);
@@ -95,8 +110,11 @@ public class pjesmaDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				command = "OK";
+				Album selected = (Album) comboAlbumi.getSelectedItem();
 				_pjesma.setTrajanje(txtTrajanje.getText());
-				_pjesma.setNaziv(txtNaziv.getText());				
+				_pjesma.setIdAlbum(selected.getIdAlbum());
+				_pjesma.setAlbum(selected.getNaziv());
+				_pjesma.setNaziv(txtNaziv.getText());	
 				pjesmaDialog.this.dispose();
 			}			
 		});

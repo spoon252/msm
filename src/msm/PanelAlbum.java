@@ -53,10 +53,11 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		scrollPane.setViewportView(table_albumi);
 		table_albumi.setBounds(10, 0, 672, 413);
 		table_albumi.getColumnModel().getColumn(1).setMaxWidth(50);
-		GetAlbumi(model);
-		table_albumi.setRowSelectionInterval(0, 0);
-		loadAdditionalInfo();
-
+		//GetAlbumi(model);
+		if(model.getRowCount() > 0) {
+			table_albumi.setRowSelectionInterval(0, 0);
+			loadAdditionalInfo();	
+		}
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(485, 209, 268, 158);
 		add(scrollPane_1);
@@ -86,7 +87,7 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		table_albumi.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				try {
-					loadAdditionalInfo();
+						loadAdditionalInfo();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

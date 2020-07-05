@@ -53,7 +53,7 @@ public class Album {
 		return this.idAlbum +" "+this.naziv + " " + this.godina;				
 	}
 	
-	public List<Album> GetAlbumi(AlbumTable model) throws SQLException {
+	public static List<Album> GetAlbumi() throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "SELECT id_album, naziv, godina from music_studio.album";
 		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);

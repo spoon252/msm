@@ -38,8 +38,9 @@ public class MusicStudioManagement extends JFrame{
 	public MusicStudioManagement() throws SQLException {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 500);
-		contentPane = new JPanel();
+		setSize(800, 500);
+		setLocationRelativeTo(null);
+		contentPane = new JPanel();		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		

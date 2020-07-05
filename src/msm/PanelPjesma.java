@@ -70,8 +70,14 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);					
 					dialog.setVisible(true);
-					if(dialog.command == "OK")
-						System.out.println(dialog._pjesma.toString());	
+					if(dialog.command == "OK") {
+						System.out.println(dialog._pjesma.toString());
+						Pjesma dodana_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
+						if(dodana_pjesma != null) {
+							model.addRow(dodana_pjesma);
+						}
+					}
+						
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -85,7 +91,6 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		btnIzbrisiPjesmu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tableScrollPane.setVisible(true);
 
 			}
 		});
@@ -99,13 +104,16 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					pjesmaDialog dialog = new pjesmaDialog(model.getRow(table.getSelectedRow()));
-					dialog.setTitle("izmijeni pjesmu");
+					dialog.setTitle("Izmijeni pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);					
 					dialog.setVisible(true);
 					if(dialog.command == "OK")
-						System.out.println(dialog._pjesma.toString());					
-					
+						System.out.println(dialog._pjesma.toString());		
+					Pjesma izmijenjena_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
+					if(izmijenjena_pjesma != null) {
+						model.replaceRow(table.getSelectedRow(), izmijenjena_pjesma);
+					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -197,6 +205,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 	}
 
 	public void addToTable(List<Pjesma> pjesme, PjesmaTable model) {
+		model.clearData();
 		for (Pjesma pjesma : pjesme) {
 			model.addRow(pjesma);
 		}
