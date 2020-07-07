@@ -53,10 +53,11 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		scrollPane.setViewportView(table_albumi);
 		table_albumi.setBounds(10, 0, 672, 413);
 		table_albumi.getColumnModel().getColumn(1).setMaxWidth(50);
-		//GetAlbumi(model);
-		if(model.getRowCount() > 0) {
+		List<Album> albumi = Album.DohvatiAlbume();
+		addToTable(albumi, model);
+		if (model.getRowCount() > 0) {
 			table_albumi.setRowSelectionInterval(0, 0);
-			loadAdditionalInfo();	
+			loadAdditionalInfo();
 		}
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(485, 209, 268, 158);
@@ -83,11 +84,23 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		lblNewLabel_1.setBounds(485, 12, 46, 14);
 		add(lblNewLabel_1);
 
+		JButton btnDodaj = new JButton("Dodaj");
+		btnDodaj.setBounds(24, 378, 89, 23);
+		add(btnDodaj);
+
+		JButton btnIzmijeni = new JButton("Izmijeni");
+		btnIzmijeni.setBounds(123, 378, 89, 23);
+		add(btnIzmijeni);
+
+		JButton btnIzbrii = new JButton("Izbriši");
+		btnIzbrii.setBounds(225, 378, 89, 23);
+		add(btnIzbrii);
+
 		// Click listener on Albumi table
 		table_albumi.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				try {
-						loadAdditionalInfo();
+					loadAdditionalInfo();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -98,31 +111,21 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 
 	public void loadAdditionalInfo() throws SQLException {
 		int selected = model.getRow(table_albumi.getSelectedRow()).getIdAlbum();
-		GetIzvodjaciForAlbum(list_model, selected);
-		Pjesma.GetPjesmeForAlbum(selected);
-	}
-
-	public void GetIzvodjaciForAlbum(DefaultListModel<String> list_model, int id) throws SQLException {
-		var con = DatabaseConnector.getConnection();
-		String query = "SELECT IZ.id_izvodjac, IZ.ime, IZ.prezime,IZ.tip "
-				+ "FROM music_studio.izvodjac as IZ " 
-				+ "WHERE IZ.id_izvodjac IN (SELECT id_izvodjac "
-						+ "FROM izvodjacalbum "
-						+ "WHERE id_album = ?)";
-		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ps.setInt(1, id);
-		ResultSet rs = ps.executeQuery();
+		list_izvodjaci = Izvodjac.DohvatiIzvodjacePoAlbumu(selected);
+		List<Pjesma> pjesme = Pjesma.DohvatiPjesmePoAlbumu(selected);
 		list_model.clear();
-		while (rs.next()) {
-			Izvodjac izvodjac = new Izvodjac();
-			izvodjac.setValue(rs);
+		for (Izvodjac izvodjac : list_izvodjaci) {
+			System.out.println(izvodjac.toString());
+
 			if (izvodjac.getPrezime() != null)
 				list_model.addElement(izvodjac.getIme() + " " + izvodjac.getPrezime());
 			else
 				list_model.addElement(izvodjac.getIme());
-
+			pjesma_model.clearData();
+			for (Pjesma pjesma : pjesme) {
+				pjesma_model.addRow(pjesma);
+			}	
 		}
-		con.close();
 	}
 
 	@Override
@@ -147,5 +150,12 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 	public void componentHidden(ComponentEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void addToTable(List<Album> albumi, AlbumTable model) {
+		model.clearData();
+		for (Album album : albumi) {
+			model.addRow(album);
+		}
 	}
 }

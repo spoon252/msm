@@ -47,7 +47,7 @@ public class pjesmaDialog extends JDialog {
 	public pjesmaDialog(Pjesma pjesma) throws SQLException {	
 		if(pjesma != null)
 			this._pjesma = pjesma;
-		albumi = Album.GetAlbumi();
+		albumi = Album.DohvatiAlbume();
 		setSize(333, 232);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());

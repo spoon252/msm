@@ -117,9 +117,19 @@ public class Pjesma {
 		return pjesma;
 	}
 	
-	public static List<Pjesma> GetPjesmeForAlbum(int id) throws SQLException {
+	public static int IzbrisiPjesmu (int id) throws SQLException {
 		var con = DatabaseConnector.getConnection();
-		String query = "SELECT id_pjesma" + ",id_album" + ",naziv" + ",trajanje" + " FROM music_studio.pjesma"
+		String query = "DELETE FROM Pjesma WHERE id_pjesma = ?";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setInt(1, id);
+		ps.execute();
+		con.close();
+		return id;
+	}
+	
+	public static List<Pjesma> DohvatiPjesmePoAlbumu(int id) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "SELECT id_pjesma" + ",id_album" + ",naziv" + ",naziv" + ",trajanje" + " FROM music_studio.pjesma"
 				+ " WHERE id_pjesma = ?";
 		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ps.setInt(1, id);

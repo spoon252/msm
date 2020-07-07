@@ -1,8 +1,15 @@
 package models;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.DefaultListModel;
+
+import msm.DatabaseConnector;
 
 public class Izvodjac {
 	public int idIzvodjac;
@@ -49,5 +56,25 @@ public class Izvodjac {
 	public String toString() {
 		return this.idIzvodjac +" "+this.ime + " " + this.prezime + " " + this.tip;
 				
+	}
+	
+	public static List<Izvodjac> DohvatiIzvodjacePoAlbumu(int id) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "SELECT IZ.id_izvodjac, IZ.ime, IZ.prezime,IZ.tip "
+				+ "FROM music_studio.izvodjac as IZ " 
+				+ "WHERE IZ.id_izvodjac IN (SELECT id_izvodjac "
+						+ "FROM izvodjacalbum "
+						+ "WHERE id_album = ?)";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		List<Izvodjac> izvodjaci = new ArrayList<Izvodjac>(); 
+		while (rs.next()) {
+			Izvodjac izvodjac = new Izvodjac();
+			izvodjac.setValue(rs);
+			izvodjaci.add(izvodjac);			
+		}
+		con.close();
+		return izvodjaci;
 	}
 }

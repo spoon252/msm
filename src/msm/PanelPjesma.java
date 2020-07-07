@@ -68,16 +68,16 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 					pjesmaDialog dialog = new pjesmaDialog(null);
 					dialog.setTitle("Dodaj pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);					
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
-					if(dialog.command == "OK") {
+					if (dialog.command == "OK") {
 						System.out.println(dialog._pjesma.toString());
 						Pjesma dodana_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
-						if(dodana_pjesma != null) {
+						if (dodana_pjesma != null) {
 							model.addRow(dodana_pjesma);
 						}
 					}
-						
+
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -91,7 +91,17 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		btnIzbrisiPjesmu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				try {
+					int removed = Pjesma.IzbrisiPjesmu(model.getRow(table.getSelectedRow()).getIdPjesma());
+					if (removed > 0) {
+						model.removeRows(table.getSelectedRow());
+						if (model.getRowCount() > 0)
+							table.setRowSelectionInterval(0, 0);
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 
@@ -106,12 +116,12 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 					pjesmaDialog dialog = new pjesmaDialog(model.getRow(table.getSelectedRow()));
 					dialog.setTitle("Izmijeni pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);					
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
-					if(dialog.command == "OK")
-						System.out.println(dialog._pjesma.toString());		
+					if (dialog.command == "OK")
+						System.out.println(dialog._pjesma.toString());
 					Pjesma izmijenjena_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
-					if(izmijenjena_pjesma != null) {
+					if (izmijenjena_pjesma != null) {
 						model.replaceRow(table.getSelectedRow(), izmijenjena_pjesma);
 					}
 				} catch (Exception ex) {
@@ -211,4 +221,3 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		}
 	}
 }
-
