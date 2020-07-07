@@ -77,4 +77,40 @@ public class Izvodjac {
 		con.close();
 		return izvodjaci;
 	}
+	
+	public static Izvodjac DodajIzvodjaca (Izvodjac izvodjac) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "INSERT INTO Izvodjac(ime, prezime, tip) " + 
+				"VALUES (?, ?, ?)";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setString(1, izvodjac.getIme());
+		ps.setString(2, izvodjac.getPrezime());
+		ps.setString(3, izvodjac.getTip());
+		ps.execute();
+		con.close();
+		return izvodjac;
+	}
+	
+	public static Izvodjac IzmijeniIzvodjaca (Izvodjac izvodjac) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "UPDATE Izvodjac SET ime = ?, prezime = ?, tip = ? WHERE id_izvodjac = ?";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setString(1, izvodjac.getIme());
+		ps.setString(2, izvodjac.getPrezime());
+		ps.setString(3, izvodjac.getTip());
+		ps.setInt(4, izvodjac.getIdIzvodjac());
+		ps.execute();
+		con.close();
+		return izvodjac;
+	}
+	
+	public static int IzbrisiIzvodjaca (int id) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "DELETE FROM Izvodjac WHERE id_izvodjac = ?";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setInt(1, id);
+		ps.execute();
+		con.close();
+		return id;
+	}
 }

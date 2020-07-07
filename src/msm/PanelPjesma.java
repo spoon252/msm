@@ -45,6 +45,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 	 */
 	public PanelPjesma() throws SQLException {
 		PjesmaTable model = new PjesmaTable();
+		model.setModelEditable(false);
 		addComponentListener(this);
 		setLayout(null);
 		JScrollPane tableScrollPane = new JScrollPane();

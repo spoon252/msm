@@ -2,6 +2,8 @@ package msm;
 
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -14,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import dialogs.izvodjacDialog;
+import dialogs.pjesmaDialog;
 import models.Izvodjac;
 import models.Pjesma;
 import tableModels.IzvodjacTable;
@@ -21,6 +25,8 @@ import tableModels.PjesmaTable;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dialog;
+
 import javax.swing.JScrollPane;
 import java.awt.Font;
 
@@ -35,13 +41,66 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 		setLayout(null);
 		addComponentListener(this);
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 382, 366);
+		scrollPane.setBounds(82, 11, 488, 325);
 		add(scrollPane);
 		table = new JTable(model);
 		scrollPane.setViewportView(table);
 		table.setBounds(10, 0, 672, 413);
+		
+		JButton btnIzmijeni = new JButton("Izmijeni");
+		btnIzmijeni.setBounds(286, 347, 89, 23);
+		add(btnIzmijeni);
+		btnIzmijeni.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					izvodjacDialog dialog = new izvodjacDialog(model.getRow(table.getSelectedRow()));
+					dialog.setTitle("Izmijeni izvođača");
+					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+					if (dialog.command == "OK") {
+						Izvodjac rezultat = Izvodjac.IzmijeniIzvodjaca(dialog._izvodjac);
+					if (rezultat != null) {
+						model.replaceRow(table.getSelectedRow(), rezultat);
+					}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		
+		JButton btnIzbrisi = new JButton("Izbriši");
+		btnIzbrisi.setBounds(385, 347, 89, 23);
+		add(btnIzbrisi);
 		table.getColumnModel().getColumn(2).setMaxWidth(95);
-		GetIzvodjaci(model);
+		GetIzvodjaci(model);		
+		
+		JButton btnDodaj = new JButton("Dodaj");
+		btnDodaj.setBounds(187, 347, 89, 23);
+		add(btnDodaj);
+		btnDodaj.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					izvodjacDialog dialog = new izvodjacDialog(null);
+					dialog.setTitle("Dodaj izvođača");
+					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+					if (dialog.command == "OK") {
+						Izvodjac dodan_izvodjac = Izvodjac.DodajIzvodjaca(dialog._izvodjac);
+						if (dodan_izvodjac != null) {
+							model.addRow(dodan_izvodjac);
+						}
+					}
+
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 	}
 	
 	@Override
