@@ -116,15 +116,14 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		list_model.clear();
 		for (Izvodjac izvodjac : list_izvodjaci) {
 			System.out.println(izvodjac.toString());
-
 			if (izvodjac.getPrezime() != null)
 				list_model.addElement(izvodjac.getIme() + " " + izvodjac.getPrezime());
 			else
 				list_model.addElement(izvodjac.getIme());
-			pjesma_model.clearData();
-			for (Pjesma pjesma : pjesme) {
-				pjesma_model.addRow(pjesma);
-			}	
+		}
+		pjesma_model.clearData();
+		for (Pjesma pjesma : pjesme) {
+			pjesma_model.addRow(pjesma);
 		}
 	}
 

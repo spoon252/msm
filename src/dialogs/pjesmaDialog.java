@@ -5,15 +5,18 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 
+import javax.swing.AbstractListModel;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import models.Album;
+import models.Izvodjac;
 import models.Pjesma;
 
 import javax.swing.JLabel;
@@ -28,6 +31,11 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.ComboBoxModel;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.border.LineBorder;
 public class pjesmaDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -38,6 +46,7 @@ public class pjesmaDialog extends JDialog {
 	private JButton btnOtkazi = new JButton("Otkaži");
 	public String command = "";
 	private List<Album> albumi;
+	private DefaultListModel<Izvodjac> list_model = new DefaultListModel<Izvodjac>();
 
 	/***
 	 * 
@@ -48,7 +57,7 @@ public class pjesmaDialog extends JDialog {
 		if(pjesma != null)
 			this._pjesma = pjesma;
 		albumi = Album.DohvatiAlbume();
-		setSize(333, 232);
+		setSize(339, 286);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -69,11 +78,6 @@ public class pjesmaDialog extends JDialog {
 		lblAlbum.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblAlbum.setBounds(66, 86, 63, 14);
 		contentPanel.add(lblAlbum);
-
-		JLabel lblSpot = new JLabel("Spot");
-		lblSpot.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblSpot.setBounds(66, 118, 63, 14);
-		contentPanel.add(lblSpot);
 
 		JComboBox comboAlbumi = new JComboBox(new DefaultComboBoxModel(albumi.toArray()));
 		comboAlbumi.setBounds(139, 83, 127, 22);
@@ -101,6 +105,25 @@ public class pjesmaDialog extends JDialog {
 		txtTrajanje.setBounds(139, 52, 127, 20);
 		contentPanel.add(txtTrajanje);
 		txtTrajanje.setText(_pjesma.getTrajanje());
+		
+		JLabel lblIzvodjac = new JLabel("Izvodjac");
+		lblIzvodjac.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblIzvodjac.setBounds(66, 116, 46, 14);
+		contentPanel.add(lblIzvodjac);
+		
+		JList listIzvodjaci = new JList(list_model);
+		listIzvodjaci.setBorder(new LineBorder(SystemColor.desktop));
+		listIzvodjaci.setBackground(SystemColor.control);
+		listIzvodjaci.setBounds(139, 116, 127, 87);
+		contentPanel.add(listIzvodjaci);	
+		List<Izvodjac> izvodjaci = Izvodjac.DohvatiIzvodjace();
+		list_model.clear();
+		listIzvodjaci.setCellRenderer(new IzvodjacListRender());
+		for (Izvodjac izvodjac : izvodjaci) {
+			System.out.println(izvodjac.toString());
+			list_model.addElement(izvodjac);
+		}
+		
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -130,3 +153,17 @@ public class pjesmaDialog extends JDialog {
 		});		
 	}
 }
+
+class IzvodjacListRender extends DefaultListCellRenderer {
+    @Override
+    public Component getListCellRendererComponent(JList list, Object value,
+           int index, boolean isSelected, boolean cellHasFocus)   {
+        Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        Izvodjac item = (Izvodjac) value;
+        if(item.getPrezime()!="" && item.getPrezime()!=null)
+        	((JLabel) c).setText(item.getIme() + " "+ item.getPrezime());
+        else
+        	((JLabel) c).setText(item.getIme());   
+       return c;
+   }
+	}

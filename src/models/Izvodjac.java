@@ -78,6 +78,21 @@ public class Izvodjac {
 		return izvodjaci;
 	}
 	
+	public static List<Izvodjac> DohvatiIzvodjace() throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "SELECT id_izvodjac, ime, prezime, tip FROM music_studio.izvodjac";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ResultSet rs = ps.executeQuery();
+		List<Izvodjac> izvodjaci = new ArrayList<Izvodjac>(); 
+		while (rs.next()) {
+			Izvodjac izvodjac = new Izvodjac();
+			izvodjac.setValue(rs);
+			izvodjaci.add(izvodjac);			
+		}
+		con.close();
+		return izvodjaci;
+	}
+	
 	public static Izvodjac DodajIzvodjaca (Izvodjac izvodjac) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "INSERT INTO Izvodjac(ime, prezime, tip) " + 
