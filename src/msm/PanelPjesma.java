@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import dialogs.pjesmaDialog;
+import models.Izvodjac;
 import models.Pjesma;
 import tableModels.PjesmaTable;
 
@@ -34,17 +35,20 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class PanelPjesma extends JPanel implements ComponentListener {
 	private JTable table;
-
+	private PjesmaTable model = new PjesmaTable();
+	private List<Izvodjac> list_izvodjaci;
+	private JLabel izvodjaci_label;
 	/**
 	 * Create the panel.
 	 * 
 	 * @throws SQLException
 	 */
 	public PanelPjesma() throws SQLException {
-		PjesmaTable model = new PjesmaTable();
 		model.setModelEditable(false);
 		addComponentListener(this);
 		setLayout(null);
@@ -57,7 +61,6 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		table.getColumnModel().getColumn(2).setMaxWidth(75);
 		List<Pjesma> pjesme = Pjesma.GetPjesme();
 		addToTable(pjesme, model);
-		table.setRowSelectionInterval(0, 0);
 		JButton btnAddPjesma = new JButton("Nova pjesma");
 		btnAddPjesma.setBounds(10, 389, 102, 29);
 		btnAddPjesma.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -66,16 +69,16 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					pjesmaDialog dialog = new pjesmaDialog(null);
+					pjesmaDialog dialog = new pjesmaDialog(null, null);
 					dialog.setTitle("Dodaj pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						System.out.println(dialog._pjesma.toString());
 						Pjesma dodana_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
 						if (dodana_pjesma != null) {
 							model.addRow(dodana_pjesma);
+							Pjesma.DodajIzvodjaceZaPjesmu(dodana_pjesma.getIdPjesma(), dialog.id_izvodjaci);
 						}
 					}
 
@@ -114,16 +117,16 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					pjesmaDialog dialog = new pjesmaDialog(model.getRow(table.getSelectedRow()));
+					pjesmaDialog dialog = new pjesmaDialog(model.getRow(table.getSelectedRow()), list_izvodjaci);
 					dialog.setTitle("Izmijeni pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
-					if (dialog.command == "OK")
-						System.out.println(dialog._pjesma.toString());
-					Pjesma izmijenjena_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
-					if (izmijenjena_pjesma != null) {
-						model.replaceRow(table.getSelectedRow(), izmijenjena_pjesma);
+					if (dialog.command == "OK") {
+						Pjesma izmijenjena_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
+						if (izmijenjena_pjesma != null) {
+							model.replaceRow(table.getSelectedRow(), izmijenjena_pjesma);
+						}
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -176,7 +179,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		panel_detalji.add(producent_label);
 		producent_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
-		JLabel izvodjaci_label = new JLabel("");
+		izvodjaci_label = new JLabel("");
 		izvodjaci_label.setBounds(73, 36, 260, 14);
 		panel_detalji.add(izvodjaci_label);
 		izvodjaci_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -190,7 +193,32 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		kompozitori_label.setBounds(93, 136, 229, 29);
 		panel_detalji.add(kompozitori_label);
 		kompozitori_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
-
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				try {
+					if (!e.getValueIsAdjusting()) 
+						loadAdditionalInfo();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		table.setRowSelectionInterval(0, 0);
+	}
+	
+	public void loadAdditionalInfo() throws SQLException {
+		int selected = model.getRow(table.getSelectedRow()).getIdPjesma();
+		list_izvodjaci = Izvodjac.DohvatiIzvodjacePoPjesmi(selected);		
+		String labeltext = "";
+		for (Izvodjac izvodjac : list_izvodjaci) {
+			if (izvodjac.getPrezime() != null)
+				labeltext += (izvodjac.getIme() + " " + izvodjac.getPrezime()) +";";
+			else
+				labeltext += izvodjac.getIme() + ";";
+		}
+		izvodjaci_label.setText(labeltext);
 	}
 
 	@Override

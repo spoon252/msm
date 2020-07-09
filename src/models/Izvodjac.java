@@ -78,6 +78,26 @@ public class Izvodjac {
 		return izvodjaci;
 	}
 	
+	public static List<Izvodjac> DohvatiIzvodjacePoPjesmi(int id) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "SELECT IZ.id_izvodjac, IZ.ime, IZ.prezime,IZ.tip "
+				+ "FROM music_studio.izvodjac as IZ " 
+				+ "WHERE IZ.id_izvodjac IN (SELECT id_izvodjac "
+						+ "FROM izvodjacpjesma "
+						+ "WHERE id_pjesma = ?)";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		List<Izvodjac> izvodjaci = new ArrayList<Izvodjac>(); 
+		while (rs.next()) {
+			Izvodjac izvodjac = new Izvodjac();
+			izvodjac.setValue(rs);
+			izvodjaci.add(izvodjac);			
+		}
+		con.close();
+		return izvodjaci;
+	}
+	
 	public static List<Izvodjac> DohvatiIzvodjace() throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "SELECT id_izvodjac, ime, prezime, tip FROM music_studio.izvodjac";
@@ -127,5 +147,18 @@ public class Izvodjac {
 		ps.execute();
 		con.close();
 		return id;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	if (obj == this) {
+	    return true;
+	}
+
+	if (!(obj instanceof Izvodjac)) {
+	    return false;
+	}
+	Izvodjac other = (Izvodjac) obj;
+	return idIzvodjac == other.getIdIzvodjac();
 	}
 }

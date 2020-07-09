@@ -3,6 +3,7 @@ package models;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,21 +94,37 @@ public class Pjesma {
 	
 	public static Pjesma DodajPjesmu (Pjesma pjesma) throws SQLException {
 		var con = DatabaseConnector.getConnection();
-		String query = "INSERT INTO Pjesma(id_album, naziv, trajanje) " + 
-				"VALUES (?, ?, ?)";
-		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		String query = "INSERT INTO Pjesma(id_album, naziv, trajanje) VALUES (?, ?, ?)";
+		PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		ps.setInt(1, pjesma.getIdAlbum());
 		ps.setString(2, pjesma.getNaziv());
 		ps.setString(3, pjesma.getTrajanje());
 		ps.execute();
+		ResultSet rs = ps.getGeneratedKeys();
+		rs.next();
+		int id = rs.getInt(1);
+		pjesma.setIdPjesma(id);
 		con.close();
 		return pjesma;
+	}
+	
+	public static void DodajIzvodjaceZaPjesmu (int id_pjesma, List<Integer> izvodjaci) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "INSERT INTO izvodjacpjesma(id_izvodjac, id_pjesma) VALUES (?, ?);";
+		PreparedStatement ps = con.prepareStatement(query);
+		for(int id_izvodjac : izvodjaci) {
+			ps.setInt(1, id_izvodjac);
+			ps.setInt(2, id_pjesma);
+			ps.addBatch();
+		}
+		ps.executeBatch();
+		con.close();
 	}
 	
 	public static Pjesma IzmijeniPjesmu (Pjesma pjesma) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "UPDATE Pjesma SET id_album = ?, naziv = ?, trajanje = ? WHERE id_pjesma = ?";
-		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		PreparedStatement ps = con.prepareStatement(query);
 		ps.setInt(1, pjesma.getIdAlbum());
 		ps.setString(2, pjesma.getNaziv());
 		ps.setString(3, pjesma.getTrajanje());

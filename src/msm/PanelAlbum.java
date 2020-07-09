@@ -56,7 +56,7 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		List<Album> albumi = Album.DohvatiAlbume();
 		addToTable(albumi, model);
 		if (model.getRowCount() > 0) {
-			table_albumi.setRowSelectionInterval(0, 0);
+			table_albumi.setRowSelectionInterval(0, 0);			
 			loadAdditionalInfo();
 		}
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -100,7 +100,8 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		table_albumi.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				try {
-					loadAdditionalInfo();
+					if (!e.getValueIsAdjusting()) 
+						loadAdditionalInfo();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
