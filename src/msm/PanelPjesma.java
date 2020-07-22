@@ -209,7 +209,10 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 	}
 	
 	public void loadAdditionalInfo() throws SQLException {
-		int selected = model.getRow(table.getSelectedRow()).getIdPjesma();
+		var row = table.getSelectedRow();
+		if(row < 0)
+			return;
+		int selected = model.getRow(row).getIdPjesma();
 		list_izvodjaci = Izvodjac.DohvatiIzvodjacePoPjesmi(selected);		
 		String labeltext = "";
 		for (Izvodjac izvodjac : list_izvodjaci) {

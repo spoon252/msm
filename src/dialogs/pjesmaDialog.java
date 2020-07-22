@@ -75,10 +75,9 @@ public class pjesmaDialog extends JDialog {
 	 * @throws SQLException
 	 */
 	public pjesmaDialog(Pjesma pjesma, List<Izvodjac> izvodjaci) throws SQLException {
-		if (pjesma != null)
-			_pjesma = pjesma;
 		inicijalizirajListe(izvodjaci);
 		albumi = Album.DohvatiAlbume();
+
 		setSize(343, 380);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -116,6 +115,11 @@ public class pjesmaDialog extends JDialog {
 				return this;
 			}
 		});
+		
+		if (pjesma != null) {
+			_pjesma = pjesma;
+			comboAlbumi.setSelectedItem(Album.FilterById(_pjesma.getIdAlbum(), albumi));
+		}
 
 		txtNaziv = new JTextField();
 		txtNaziv.setBounds(139, 21, 127, 20);

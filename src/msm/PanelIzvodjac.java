@@ -74,6 +74,22 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 		JButton btnIzbrisi = new JButton("Izbriši");
 		btnIzbrisi.setBounds(385, 347, 89, 23);
 		add(btnIzbrisi);
+		btnIzbrisi.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int removed = Izvodjac.IzbrisiIzvodjaca(model.getRow(table.getSelectedRow()).getIdIzvodjac());
+					if (removed > 0) {
+						model.removeRows(table.getSelectedRow());
+						if (model.getRowCount() > 0)
+							table.setRowSelectionInterval(0, 0);
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		table.getColumnModel().getColumn(2).setMaxWidth(95);
 		GetIzvodjaci(model);		
 		

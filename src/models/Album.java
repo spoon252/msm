@@ -68,5 +68,13 @@ public class Album {
 		return albumi;
 	}
 	
+	public static Album FilterById(int id, List<Album> albums) {
+	    for(Album album : albums) {
+	        if(album.getIdAlbum() == id) {
+	            return album;
+	        }
+	    }
+	    return null;
+	}	
 
 }
