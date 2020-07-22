@@ -1,5 +1,6 @@
 package models;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -121,8 +122,19 @@ public class Pjesma {
 		con.close();
 	}
 	
+	public static void IzbrisiIzvodjaceZaPjesmu (int id_pjesma, Connection con) throws SQLException {
+		if(con == null)
+			con = DatabaseConnector.getConnection();
+		String query = "DELETE FROM izvodjacpjesma WHERE id_pjesma = ?;";
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setInt(1, id_pjesma);
+		ps.execute();
+		con.close();
+	}
+	
 	public static Pjesma IzmijeniPjesmu (Pjesma pjesma) throws SQLException {
 		var con = DatabaseConnector.getConnection();
+		
 		String query = "UPDATE Pjesma SET id_album = ?, naziv = ?, trajanje = ? WHERE id_pjesma = ?";
 		PreparedStatement ps = con.prepareStatement(query);
 		ps.setInt(1, pjesma.getIdAlbum());
