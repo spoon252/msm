@@ -104,7 +104,7 @@ public class izvodjacDialog extends JDialog {
 			rbtnBend.setEnabled(false);
 		}		
 		else
-			rbtnSolo.doClick();
+			rbtnSolo.doClick(); 
 		
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

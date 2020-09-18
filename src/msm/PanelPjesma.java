@@ -78,7 +78,9 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 						Pjesma dodana_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
 						if (dodana_pjesma != null) {
 							model.addRow(dodana_pjesma);
+							pjesme.add(dodana_pjesma);
 							Pjesma.DodajIzvodjaceZaPjesmu(dodana_pjesma.getIdPjesma(), dialog.id_izvodjaci);
+							table.setRowSelectionInterval(pjesme.size()-1, pjesme.size()-1);
 						}
 					}
 
@@ -96,9 +98,15 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int removed = Pjesma.IzbrisiPjesmu(model.getRow(table.getSelectedRow()).getIdPjesma());
+					if(table.getSelectedRow() == -1 && pjesme.size() > 0)
+						table.setRowSelectionInterval(0, 0);
+					else if(table.getSelectedRow() == -1 || pjesme.size() < 1)
+						return;
+					int selectedRow = table.getSelectedRow();
+					int removed = Pjesma.IzbrisiPjesmu(model.getRow(selectedRow).getIdPjesma());
 					if (removed > 0) {
-						model.removeRows(table.getSelectedRow());
+						model.removeRows(selectedRow);
+						pjesme.remove(selectedRow);
 						if (model.getRowCount() > 0)
 							table.setRowSelectionInterval(0, 0);
 					}
@@ -117,15 +125,22 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					if(table.getSelectedRow() == -1 && pjesme.size() > 0)
+						table.setRowSelectionInterval(0, 0);
+					else if(table.getSelectedRow() == -1 || pjesme.size() < 1)
+						return;
 					pjesmaDialog dialog = new pjesmaDialog(model.getRow(table.getSelectedRow()), list_izvodjaci);
 					dialog.setTitle("Izmijeni pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						Pjesma izmijenjena_pjesma = Pjesma.DodajPjesmu(dialog._pjesma);
+						Pjesma izmijenjena_pjesma = Pjesma.IzmijeniPjesmu(dialog._pjesma);
 						if (izmijenjena_pjesma != null) {
 							model.replaceRow(table.getSelectedRow(), izmijenjena_pjesma);
+							Pjesma.IzbrisiIzvodjaceZaPjesmu(izmijenjena_pjesma.getIdPjesma());
+							Pjesma.DodajIzvodjaceZaPjesmu(izmijenjena_pjesma.getIdPjesma(), dialog.id_izvodjaci);
+							loadAdditionalInfo();
 						}
 					}
 				} catch (Exception ex) {
@@ -205,7 +220,8 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 				}
 			}
 		});
-		table.setRowSelectionInterval(0, 0);
+		if(pjesme.size() > 0)
+			table.setRowSelectionInterval(0, 0);
 	}
 	
 	public void loadAdditionalInfo() throws SQLException {
@@ -217,9 +233,9 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		String labeltext = "";
 		for (Izvodjac izvodjac : list_izvodjaci) {
 			if (izvodjac.getPrezime() != null)
-				labeltext += (izvodjac.getIme() + " " + izvodjac.getPrezime()) +";";
+				labeltext += (izvodjac.getIme() + " " + izvodjac.getPrezime()) +"; ";
 			else
-				labeltext += izvodjac.getIme() + ";";
+				labeltext += izvodjac.getIme() + "; ";
 		}
 		izvodjaci_label.setText(labeltext);
 	}

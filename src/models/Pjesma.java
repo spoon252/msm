@@ -122,9 +122,8 @@ public class Pjesma {
 		con.close();
 	}
 	
-	public static void IzbrisiIzvodjaceZaPjesmu (int id_pjesma, Connection con) throws SQLException {
-		if(con == null)
-			con = DatabaseConnector.getConnection();
+	public static void IzbrisiIzvodjaceZaPjesmu (int id_pjesma) throws SQLException {
+		var con = DatabaseConnector.getConnection();
 		String query = "DELETE FROM izvodjacpjesma WHERE id_pjesma = ?;";
 		PreparedStatement ps = con.prepareStatement(query);
 		ps.setInt(1, id_pjesma);
@@ -133,8 +132,7 @@ public class Pjesma {
 	}
 	
 	public static Pjesma IzmijeniPjesmu (Pjesma pjesma) throws SQLException {
-		var con = DatabaseConnector.getConnection();
-		
+		var con = DatabaseConnector.getConnection();		
 		String query = "UPDATE Pjesma SET id_album = ?, naziv = ?, trajanje = ? WHERE id_pjesma = ?";
 		PreparedStatement ps = con.prepareStatement(query);
 		ps.setInt(1, pjesma.getIdAlbum());
