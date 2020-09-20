@@ -1,59 +1,59 @@
-package tableModels;
+package modeli;
 
-import java.sql.Date;
 import java.util.Arrays;
+import java.util.List;
 
-import models.Osoba;
+import entiteti.Pjesma;
 
-public class OsobaTable extends RowTableModel<Osoba> {
+@SuppressWarnings("serial")
+public class PjesmaTable extends RowTableModel<Pjesma> {
 
     private static String[] COLUMN_NAMES =
     {
-        "Ime",
-        "Prezime",
-        "Datum rođenja"
+        "Naziv",
+        "Album",
+        "Trajanje"
     };
     
-    public OsobaTable()
+    public PjesmaTable()
     {
     	super( Arrays.asList(COLUMN_NAMES) );
-		setRowClass( Osoba.class );
+		setRowClass( Pjesma.class );
     }
     
 	@Override
 	public Object getValueAt(int row, int column)
 	{
-		Osoba osoba = getRow(row);
+		Pjesma pjesma = getRow(row);
 
 		switch (column)
         {
             case 0: 
-            	return osoba.getIme();
+            	return pjesma.getNaziv();
             case 1: 
-            	return osoba.getPrezime();
+            	return pjesma.getAlbum();
             case 2: 
-            	return osoba.getDatumRodjenja();
+            	return pjesma.getTrajanje();
             default: 
             	return null;
         }
 	}
 
-
 	@Override
 	public void setValueAt(Object value, int row, int column)
 	{
-		Osoba osoba = getRow(row);
+		Pjesma pjesma = getRow(row);
 
 		switch (column)
         {
             case 0: 
-            	osoba.setIme((String)value); 
+            	pjesma.setNaziv((String)value); 
             	break;
             case 1: 
-            	osoba.setPrezime((String)value);
+            	pjesma.setAlbum((String)value);
             	break;
             case 2: 
-            	osoba.setDatumRodjenja((Date)value);
+            	pjesma.setTrajanje((String)value); 
             	break;
         }
 

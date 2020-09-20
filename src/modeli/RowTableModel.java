@@ -1,4 +1,4 @@
-package tableModels;
+package modeli;
 import java.lang.reflect.*;
 import java.util.*;
 import javax.swing.table.*;

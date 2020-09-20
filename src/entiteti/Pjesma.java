@@ -1,4 +1,4 @@
-package models;
+package entiteti;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import modeli.PjesmaTable;
 import msm.DatabaseConnector;
-import tableModels.PjesmaTable;
 
 public class Pjesma {
 	public int idPjesma;

@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,18 +20,21 @@ import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import models.Album;
-import models.Izvodjac;
-import models.Pjesma;
-import tableModels.AlbumTable;
-import tableModels.IzvodjacTable;
-import tableModels.PjesmaTable;
+import dialogs.AlbumDialog;
+import dialogs.pjesmaDialog;
+import entiteti.Album;
+import entiteti.Izvodjac;
+import entiteti.Pjesma;
+import modeli.AlbumTable;
+import modeli.IzvodjacTable;
+import modeli.PjesmaTable;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
+import java.awt.Dialog;
 
 public class PanelAlbum extends JPanel implements ComponentListener {
 	private JTable table_albumi;
@@ -87,10 +91,61 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 		JButton btnDodaj = new JButton("Dodaj");
 		btnDodaj.setBounds(24, 378, 89, 23);
 		add(btnDodaj);
+		btnDodaj.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					AlbumDialog dialog = new AlbumDialog(null, null);
+					dialog.setTitle("Dodaj album");
+					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+					if (dialog.command == "OK") {
+						Album dodan_album = Album.DodajAlbum(dialog._album);
+						if (dodan_album != null) {
+							model.addRow(dodan_album);
+							albumi.add(dodan_album);
+							Album.DodajIzvodjaceZaAlbum(dodan_album.getIdAlbum(), dialog.id_izvodjaci);
+							table_albumi.setRowSelectionInterval(albumi.size()-1, albumi.size()-1);
+						}
+					}
+
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 
 		JButton btnIzmijeni = new JButton("Izmijeni");
 		btnIzmijeni.setBounds(123, 378, 89, 23);
 		add(btnIzmijeni);
+		btnIzmijeni.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if(table_albumi.getSelectedRow() == -1 && albumi.size() > 0)
+						table_albumi.setRowSelectionInterval(0, 0);
+					else if(table_albumi.getSelectedRow() == -1 || albumi.size() < 1)
+						return;
+					AlbumDialog dialog = new AlbumDialog(model.getRow(table_albumi.getSelectedRow()), list_izvodjaci);
+					dialog.setTitle("Izmijeni album");
+					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+					if (dialog.command == "OK") {
+						Album izmijenjen_album = Album.IzmijeniAlbum(dialog._album);
+						if (izmijenjen_album != null) {
+							model.replaceRow(table_albumi.getSelectedRow(), izmijenjen_album);
+							Album.IzbrisiIzvodjaceZaAlbum(izmijenjen_album.getIdAlbum());
+							Album.DodajIzvodjaceZaAlbum(izmijenjen_album.getIdAlbum(), dialog.id_izvodjaci);
+							loadAdditionalInfo();
+						}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 
 		JButton btnIzbrii = new JButton("Izbriši");
 		btnIzbrii.setBounds(225, 378, 89, 23);
@@ -111,7 +166,10 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 	}
 
 	public void loadAdditionalInfo() throws SQLException {
-		int selected = model.getRow(table_albumi.getSelectedRow()).getIdAlbum();
+		int row = table_albumi.getSelectedRow();
+		if(row < 0)
+			return;
+		int selected = model.getRow(row).getIdAlbum();
 		list_izvodjaci = Izvodjac.DohvatiIzvodjacePoAlbumu(selected);
 		List<Pjesma> pjesme = Pjesma.DohvatiPjesmePoAlbumu(selected);
 		list_model.clear();

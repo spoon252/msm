@@ -1,4 +1,4 @@
-package models;
+package entiteti;
 
 import java.sql.Date;
 import java.sql.ResultSet;

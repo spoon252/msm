@@ -2,56 +2,36 @@ package dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.AbstractListModel;
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import models.Album;
-import models.Izvodjac;
-import models.Pjesma;
-
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.sql.Array;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
-import java.util.stream.IntStream;
-
-import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
-import javax.swing.ComboBoxModel;
-import java.awt.Color;
-import java.awt.SystemColor;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import com.mysql.cj.util.StringUtils;
-
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
+import entiteti.Album;
+import entiteti.Izvodjac;
+import entiteti.Pjesma;
+import modeli.IzvodjacListRender;
 
 public class pjesmaDialog extends JDialog {
 
@@ -256,19 +236,5 @@ public class pjesmaDialog extends JDialog {
 		if (_pjesma.getNaziv().length() < 1 || _pjesma.getTrajanje().length() < 1 || id_izvodjaci.isEmpty())
 			return "Greška u unošenju informacija. Potrebno je unijeti naziv, trajanje i barem jednog izvođača!";
 		return "";
-	}
-}
-
-class IzvodjacListRender extends DefaultListCellRenderer {
-	@Override
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-			boolean cellHasFocus) {
-		Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-		Izvodjac item = (Izvodjac) value;
-		if (item.getPrezime() != "" && item.getPrezime() != null)
-			((JLabel) c).setText(item.getIme() + " " + item.getPrezime());
-		else
-			((JLabel) c).setText(item.getIme());
-		return c;
 	}
 }

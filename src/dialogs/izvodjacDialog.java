@@ -16,7 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import models.Izvodjac;
+import entiteti.Izvodjac;
+
 import javax.swing.JRadioButton;
 
 public class izvodjacDialog extends JDialog {

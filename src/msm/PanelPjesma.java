@@ -17,9 +17,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import dialogs.pjesmaDialog;
-import models.Izvodjac;
-import models.Pjesma;
-import tableModels.PjesmaTable;
+import entiteti.Izvodjac;
+import entiteti.Pjesma;
+import modeli.PjesmaTable;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

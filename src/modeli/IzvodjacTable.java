@@ -1,10 +1,10 @@
-package tableModels;
+package modeli;
 
 import java.sql.Date;
 import java.util.Arrays;
 
-import models.Izvodjac;
-import models.Pjesma;
+import entiteti.Izvodjac;
+import entiteti.Pjesma;
 
 public class IzvodjacTable extends RowTableModel<Izvodjac> {
 

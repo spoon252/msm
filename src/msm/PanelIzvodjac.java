@@ -18,10 +18,10 @@ import javax.swing.table.JTableHeader;
 
 import dialogs.izvodjacDialog;
 import dialogs.pjesmaDialog;
-import models.Izvodjac;
-import models.Pjesma;
-import tableModels.IzvodjacTable;
-import tableModels.PjesmaTable;
+import entiteti.Izvodjac;
+import entiteti.Pjesma;
+import modeli.IzvodjacTable;
+import modeli.PjesmaTable;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

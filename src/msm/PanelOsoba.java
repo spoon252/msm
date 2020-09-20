@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import models.Osoba;
-import tableModels.OsobaTable;
+import entiteti.Osoba;
+import modeli.OsobaTable;
 
 public class PanelOsoba extends JPanel implements ComponentListener  {
 	private JTable table;

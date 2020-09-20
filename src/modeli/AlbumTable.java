@@ -1,7 +1,8 @@
-package tableModels;
+package modeli;
 
 import java.util.Arrays;
-import models.Album;
+
+import entiteti.Album;
 
 public class AlbumTable extends RowTableModel<Album> {
 
