@@ -83,6 +83,16 @@ public class Album {
 		return album;
 	}
 	
+	public static int IzbrisiAlbum (int id) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "DELETE FROM Album WHERE id_album = ?";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setInt(1, id);
+		ps.execute();
+		con.close();
+		return id;
+	}
+	
 	public static void DodajIzvodjaceZaAlbum (int id, List<Integer> izvodjaci) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "INSERT INTO izvodjacalbum(id_izvodjac, id_album) VALUES (?, ?);";

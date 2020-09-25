@@ -6,35 +6,20 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-
 import dialogs.pjesmaDialog;
 import entiteti.Izvodjac;
 import entiteti.Pjesma;
 import modeli.PjesmaTable;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dialog;
-import java.awt.FlowLayout;
-
 import javax.swing.JScrollPane;
 import java.awt.Font;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.Box;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 

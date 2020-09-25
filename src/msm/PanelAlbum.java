@@ -147,9 +147,31 @@ public class PanelAlbum extends JPanel implements ComponentListener {
 			}
 		});
 
-		JButton btnIzbrii = new JButton("Izbriši");
-		btnIzbrii.setBounds(225, 378, 89, 23);
-		add(btnIzbrii);
+		JButton btnIzbrisi = new JButton("Izbriši");
+		btnIzbrisi.setBounds(225, 378, 89, 23);
+		add(btnIzbrisi);
+		btnIzbrisi.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if(table_albumi.getSelectedRow() == -1 && albumi.size() > 0)
+						table_albumi.setRowSelectionInterval(0, 0);
+					else if(table_albumi.getSelectedRow() == -1 || albumi.size() < 1)
+						return;
+					int selectedRow = table_albumi.getSelectedRow();
+					int removed = Album.IzbrisiAlbum(model.getRow(selectedRow).getIdAlbum());
+					if (removed > 0) {
+						model.removeRows(selectedRow);
+						albumi.remove(selectedRow);
+						if (model.getRowCount() > 0)
+							table_albumi.setRowSelectionInterval(0, 0);
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 
 		// Click listener on Albumi table
 		table_albumi.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
