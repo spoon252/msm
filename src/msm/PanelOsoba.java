@@ -12,8 +12,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import dialogs.osobaDialog;
 import entiteti.Osoba;
+import entiteti.Pjesma;
 import modeli.OsobaTable;
+import modeli.PjesmaTable;
+
 import java.awt.Dialog;
+import java.util.List;
 
 import javax.swing.JScrollPane;
 
@@ -28,17 +32,18 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 		setLayout(null);
 		addComponentListener(this);
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(52, 11, 543, 325);
+		scrollPane.setBounds(52, 11, 486, 350);
 		add(scrollPane);
 		table = new JTable(model);
 		scrollPane.setViewportView(table);
 		table.setBounds(10, 0, 672, 413);
-		table.getColumnModel().getColumn(0).setMaxWidth(125);
-		table.getColumnModel().getColumn(1).setMaxWidth(125);
-		//table.getColumnModel().getColumn(2).setMaxWidth(125);
-
+		table.getColumnModel().getColumn(0).setMaxWidth(200);
+		table.getColumnModel().getColumn(1).setMaxWidth(200);
+		//table.getColumnModel().getColumn(2).setMaxWidth(165);
+		List<Osoba> osobe = Osoba.DohvatiSve();
+		addToTable(osobe, model);
 		JButton btnIzmijeni = new JButton("Izmijeni");
-		btnIzmijeni.setBounds(286, 347, 89, 23);
+		btnIzmijeni.setBounds(229, 372, 89, 23);
 		add(btnIzmijeni);
 		btnIzmijeni.addActionListener(new ActionListener() {
 			@Override
@@ -62,7 +67,7 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 		});
 		
 		JButton btnIzbrisi = new JButton("Izbriši");
-		btnIzbrisi.setBounds(385, 347, 89, 23);
+		btnIzbrisi.setBounds(328, 372, 89, 23);
 		add(btnIzbrisi);
 		btnIzbrisi.addActionListener(new ActionListener() {
 			@Override
@@ -83,7 +88,7 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 		table.getColumnModel().getColumn(2).setMaxWidth(95);
 		
 		JButton btnDodaj = new JButton("Dodaj");
-		btnDodaj.setBounds(187, 347, 89, 23);
+		btnDodaj.setBounds(130, 372, 89, 23);
 		add(btnDodaj);
 		btnDodaj.addActionListener(new ActionListener() {
 			@Override
@@ -106,7 +111,14 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 			}
 		});
 	}
-	
+
+	public void addToTable(List<Osoba> elementi, OsobaTable model) {
+		model.clearData();
+		for (Osoba element : elementi) {
+			model.addRow(element);
+		}
+	}
+
 	@Override
 	public void componentResized(ComponentEvent e) {
 		// TODO Auto-generated method stub
@@ -121,9 +133,13 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 
 	@Override
 	public void componentShown(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
-	}
+		// TODO Auto-generated method stub
+		
+	}	
 }

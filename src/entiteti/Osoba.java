@@ -15,6 +15,7 @@ public class Osoba {
 	public String ime;
 	public String prezime;
 	public Date datumRodjenja;
+	public String funkcija;
 	
 	public int getIdosoba() {
 		return idOsoba;
@@ -37,9 +38,11 @@ public class Osoba {
 	public Date getDatumRodjenja() {
 		return datumRodjenja;
 	}
+	public String getFunkcija() {
+		return funkcija;
+	}
 	public void setDatumRodjenja(java.util.Date datumRodjenja) {
 		java.sql.Date sqlDate = new java.sql.Date(datumRodjenja.getTime()); 
-		System.out.println("SQL date in Java : " + sqlDate); 
 		this.datumRodjenja = sqlDate;
 	}
 	
@@ -49,6 +52,8 @@ public class Osoba {
 			this.ime = rs.getString(2);
 			this.prezime = rs.getString(3);
 			this.datumRodjenja = rs.getDate(4);
+			if(rs.getMetaData().getColumnCount() > 4)
+				this.funkcija = rs.getString(5);
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -60,10 +65,29 @@ public class Osoba {
 				
 	}
 	
-	public static List<Osoba> Dohvati() throws SQLException {
+	public static List<Osoba> DohvatiSve() throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "SELECT id_osoba, ime, prezime, datum_rodjenja from music_studio.osoba";
 		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ResultSet rs = ps.executeQuery();
+		List<Osoba> osobe = new ArrayList<Osoba>();
+		while (rs.next()) {
+			Osoba osoba = new Osoba();
+			osoba.setValue(rs);
+			osobe.add(osoba);
+		}
+		con.close();
+		return osobe;
+	}
+	
+	public static List<Osoba> DohvatiSveZaPjesmu(int id) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "SELECT os.id_osoba, os.ime, os.prezime, os.datum_rodjenja, ofp.naziv_funkcije " + 
+				"from music_studio.osoba as os " + 
+				"join osobafunkcijapjesma as ofp " + 
+				"on ofp.id_pjesma = ?";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 		List<Osoba> osobe = new ArrayList<Osoba>();
 		while (rs.next()) {

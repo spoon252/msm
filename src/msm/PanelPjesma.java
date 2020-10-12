@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import dialogs.pjesmaDialog;
 import entiteti.Izvodjac;
+import entiteti.Osoba;
 import entiteti.Pjesma;
 import modeli.PjesmaTable;
 
@@ -27,7 +28,13 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 	private JTable table;
 	private PjesmaTable model = new PjesmaTable();
 	private List<Izvodjac> list_izvodjaci;
+	private List<Osoba> list_osobe;
 	private JLabel izvodjaci_label;
+	private JLabel aranzeri_label;
+	private JLabel producenti_label;
+	private JLabel tekstopisci_label;
+	private JLabel kompozitori_label;
+
 	/**
 	 * Create the panel.
 	 * 
@@ -169,27 +176,27 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		panel_detalji.add(lblNewLabel_1);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 
-		JLabel tekstopisci_label = new JLabel("");
+		tekstopisci_label = new JLabel("");
 		tekstopisci_label.setBounds(83, 87, 250, 29);
 		panel_detalji.add(tekstopisci_label);
 		tekstopisci_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
-		JLabel producent_label = new JLabel("");
-		producent_label.setBounds(86, 219, 247, 29);
-		panel_detalji.add(producent_label);
-		producent_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		producenti_label = new JLabel("");
+		producenti_label.setBounds(86, 219, 247, 29);
+		panel_detalji.add(producenti_label);
+		producenti_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 		izvodjaci_label = new JLabel("");
 		izvodjaci_label.setBounds(73, 36, 260, 14);
 		panel_detalji.add(izvodjaci_label);
 		izvodjaci_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
-		JLabel aranzeri_label = new JLabel("");
+		aranzeri_label = new JLabel("");
 		aranzeri_label.setBounds(74, 175, 260, 29);
 		panel_detalji.add(aranzeri_label);
 		aranzeri_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
-		JLabel kompozitori_label = new JLabel("");
+		kompozitori_label = new JLabel("");
 		kompozitori_label.setBounds(93, 136, 229, 29);
 		panel_detalji.add(kompozitori_label);
 		kompozitori_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -214,7 +221,9 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		if(row < 0)
 			return;
 		int selected = model.getRow(row).getIdPjesma();
-		list_izvodjaci = Izvodjac.DohvatiIzvodjacePoPjesmi(selected);		
+		list_izvodjaci = Izvodjac.DohvatiIzvodjacePoPjesmi(selected);	
+		list_osobe = Osoba.DohvatiSveZaPjesmu(selected);
+		popuniDodatneInformacije();
 		String labeltext = "";
 		for (Izvodjac izvodjac : list_izvodjaci) {
 			if (izvodjac.getPrezime() != null)
@@ -223,6 +232,38 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 				labeltext += izvodjac.getIme() + "; ";
 		}
 		izvodjaci_label.setText(labeltext);
+	}
+	
+	public void popuniDodatneInformacije() {
+		String aranzeri = "";
+		String kompozitori ="";
+		String producenti="";
+		String tekstopisci="";
+		aranzeri_label.setText("");
+		kompozitori_label.setText("");
+		tekstopisci_label.setText("");
+		producenti_label.setText("");
+		for(Osoba osoba : list_osobe)
+			switch (osoba.getFunkcija()) {
+			case "Aranzer":
+				aranzeri += (osoba.getIme() + " " + osoba.getPrezime()) +"; ";
+				break;
+			case "Kompozitor":
+				kompozitori += (osoba.getIme() + " " + osoba.getPrezime()) +"; ";
+				break;
+			case "Producent":
+				producenti += (osoba.getIme() + " " + osoba.getPrezime()) +"; ";
+				break;
+			case "Tekstopisac":
+				tekstopisci += (osoba.getIme() + " " + osoba.getPrezime()) +"; ";
+				break;	
+			default:
+				break;
+			}
+		aranzeri_label.setText(aranzeri);
+		kompozitori_label.setText(kompozitori);
+		tekstopisci_label.setText(tekstopisci);
+		producenti_label.setText(producenti);
 	}
 
 	@Override
