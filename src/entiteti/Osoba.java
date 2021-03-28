@@ -85,9 +85,31 @@ public class Osoba {
 		String query = "SELECT os.id_osoba, os.ime, os.prezime, os.datum_rodjenja, ofp.naziv_funkcije " + 
 				"from music_studio.osoba as os " + 
 				"join osobafunkcijapjesma as ofp " + 
-				"on ofp.id_pjesma = ?";
+				"on ofp.id_osoba = os.id_osoba "+
+				"where ofp.id_pjesma = ?";
 		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		List<Osoba> osobe = new ArrayList<Osoba>();
+		while (rs.next()) {
+			Osoba osoba = new Osoba();
+			osoba.setValue(rs);
+			osobe.add(osoba);
+		}
+		con.close();
+		return osobe;
+	}
+	
+	public static List<Osoba> DohvatiZaPjesmuPoFunkciji(int id, String funkcija) throws SQLException {
+		var con = DatabaseConnector.getConnection();
+		String query = "SELECT os.id_osoba, os.ime, os.prezime, os.datum_rodjenja, ofp.naziv_funkcije " + 
+				"from music_studio.osoba as os " + 
+				"join osobafunkcijapjesma as ofp " + 
+				"on ofp.id_osoba = os.id_osoba "+
+				"where ofp.id_pjesma = ? and ofp.naziv_funkcije = ?";
+		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ps.setInt(1, id);
+		ps.setString(2, funkcija);
 		ResultSet rs = ps.executeQuery();
 		List<Osoba> osobe = new ArrayList<Osoba>();
 		while (rs.next()) {

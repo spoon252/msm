@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import dialogs.izvodjacDialog;
-import dialogs.pjesmaDialog;
+import dialogs.PjesmaDialog;
 import entiteti.Izvodjac;
 import entiteti.Pjesma;
 import modeli.IzvodjacTable;

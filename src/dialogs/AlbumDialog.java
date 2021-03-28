@@ -29,7 +29,7 @@ import javax.swing.border.LineBorder;
 
 import entiteti.Album;
 import entiteti.Izvodjac;
-import modeli.IzvodjacListRender;
+import modeli.OsobaListRender;
 
 public class AlbumDialog extends JDialog {
 
@@ -116,7 +116,7 @@ public class AlbumDialog extends JDialog {
 		listSelektovaniIzvodjaci.setBackground(SystemColor.menu);
 		listSelektovaniIzvodjaci.setBounds(190, 149, 127, 148);
 		contentPanel.add(listSelektovaniIzvodjaci);
-		listSelektovaniIzvodjaci.setCellRenderer(new IzvodjacListRender());
+		listSelektovaniIzvodjaci.setCellRenderer(new OsobaListRender());
 
 		JLabel lblIzabraniIzvodjaci = new JLabel("Izabrani izvođači");
 		lblIzabraniIzvodjaci.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -147,7 +147,7 @@ public class AlbumDialog extends JDialog {
 		scrollPane.setViewportView(listDostupniIzvodjaci);
 		listDostupniIzvodjaci.setBorder(null);
 		listDostupniIzvodjaci.setBackground(SystemColor.control);
-		listDostupniIzvodjaci.setCellRenderer(new IzvodjacListRender());
+		listDostupniIzvodjaci.setCellRenderer(new OsobaListRender());
 		
 		textField = new JTextField();
 		textField.setText((String) null);

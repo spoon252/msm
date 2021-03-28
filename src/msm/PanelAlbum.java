@@ -21,7 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import dialogs.AlbumDialog;
-import dialogs.pjesmaDialog;
+import dialogs.PjesmaDialog;
 import entiteti.Album;
 import entiteti.Izvodjac;
 import entiteti.Pjesma;

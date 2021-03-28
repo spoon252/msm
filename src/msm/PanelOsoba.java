@@ -10,7 +10,7 @@ import java.awt.event.ComponentListener;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import dialogs.osobaDialog;
+import dialogs.OsobaDialog;
 import entiteti.Osoba;
 import entiteti.Pjesma;
 import modeli.OsobaTable;
@@ -49,7 +49,7 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					osobaDialog dialog = new osobaDialog(model.getRow(table.getSelectedRow()));
+					OsobaDialog dialog = new OsobaDialog(model.getRow(table.getSelectedRow()));
 					dialog.setTitle("Izmijeni osobu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -94,7 +94,7 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					osobaDialog dialog = new osobaDialog(null);
+					OsobaDialog dialog = new OsobaDialog(null);
 					dialog.setTitle("Dodaj osobu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

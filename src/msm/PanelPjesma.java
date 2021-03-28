@@ -10,7 +10,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import dialogs.pjesmaDialog;
+
+import dialogs.OsobaFunkcijaDialog;
+import dialogs.PjesmaDialog;
+import entiteti.Funkcija;
 import entiteti.Izvodjac;
 import entiteti.Osoba;
 import entiteti.Pjesma;
@@ -29,17 +32,13 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 	private PjesmaTable model = new PjesmaTable();
 	private List<Izvodjac> list_izvodjaci;
 	private List<Osoba> list_osobe;
+	private List<Funkcija> funkcije;
 	private JLabel izvodjaci_label;
 	private JLabel aranzeri_label;
 	private JLabel producenti_label;
 	private JLabel tekstopisci_label;
 	private JLabel kompozitori_label;
 
-	/**
-	 * Create the panel.
-	 * 
-	 * @throws SQLException
-	 */
 	public PanelPjesma() throws SQLException {
 		model.setModelEditable(false);
 		addComponentListener(this);
@@ -51,17 +50,21 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		tableScrollPane.setViewportView(table);
 		table.setBounds(10, 0, 672, 413);
 		table.getColumnModel().getColumn(2).setMaxWidth(75);
+		//dohvati sve pjesme i popuni tabelu
 		List<Pjesma> pjesme = Pjesma.GetPjesme();
-		addToTable(pjesme, model);
+		dodajUTabelu(pjesme, model);
+		this.funkcije = Funkcija.DohvatiFunkcije();
+		List<Osoba> sve_osobe = Osoba.DohvatiSve();
 		JButton btnAddPjesma = new JButton("Nova pjesma");
 		btnAddPjesma.setBounds(10, 389, 102, 29);
 		btnAddPjesma.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		add(btnAddPjesma);
+		//DODAJ, OBRISI I IZMIJENI PJESMU - DIALOG
 		btnAddPjesma.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					pjesmaDialog dialog = new pjesmaDialog(null, null);
+					PjesmaDialog dialog = new PjesmaDialog(null, null);
 					dialog.setTitle("Dodaj pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -121,7 +124,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 						table.setRowSelectionInterval(0, 0);
 					else if(table.getSelectedRow() == -1 || pjesme.size() < 1)
 						return;
-					pjesmaDialog dialog = new pjesmaDialog(model.getRow(table.getSelectedRow()), list_izvodjaci);
+					PjesmaDialog dialog = new PjesmaDialog(model.getRow(table.getSelectedRow()), list_izvodjaci);
 					dialog.setTitle("Izmijeni pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -132,7 +135,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 							model.replaceRow(table.getSelectedRow(), izmijenjena_pjesma);
 							Pjesma.IzbrisiIzvodjaceZaPjesmu(izmijenjena_pjesma.getIdPjesma());
 							Pjesma.DodajIzvodjaceZaPjesmu(izmijenjena_pjesma.getIdPjesma(), dialog.id_izvodjaci);
-							loadAdditionalInfo();
+							dohvatiDodatneInformacije();
 						}
 					}
 				} catch (Exception ex) {
@@ -140,7 +143,9 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 				}
 			}
 		});
-
+		
+		//DETALJI PANEL
+		
 		JPanel panel_detalji = new JPanel();
 		panel_detalji.setBounds(423, 11, 343, 365);
 		add(panel_detalji);
@@ -157,7 +162,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		lblProducent.setFont(new Font("Tahoma", Font.BOLD, 12));
 
 		JLabel lblTekstopisci = new JLabel("Tekstopisci:");
-		lblTekstopisci.setBounds(9, 87, 90, 14);
+		lblTekstopisci.setBounds(10, 102, 90, 14);
 		panel_detalji.add(lblTekstopisci);
 		lblTekstopisci.setFont(new Font("Tahoma", Font.BOLD, 12));
 
@@ -177,12 +182,12 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 
 		tekstopisci_label = new JLabel("");
-		tekstopisci_label.setBounds(83, 87, 250, 29);
+		tekstopisci_label.setBounds(83, 101, 250, 15);
 		panel_detalji.add(tekstopisci_label);
 		tekstopisci_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 		producenti_label = new JLabel("");
-		producenti_label.setBounds(86, 219, 247, 29);
+		producenti_label.setBounds(86, 219, 247, 58);
 		panel_detalji.add(producenti_label);
 		producenti_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
@@ -192,20 +197,45 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		izvodjaci_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 		aranzeri_label = new JLabel("");
-		aranzeri_label.setBounds(74, 175, 260, 29);
+		aranzeri_label.setBounds(74, 175, 260, 15);
 		panel_detalji.add(aranzeri_label);
 		aranzeri_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 		kompozitori_label = new JLabel("");
-		kompozitori_label.setBounds(93, 136, 229, 29);
+		kompozitori_label.setBounds(93, 136, 229, 14);
 		panel_detalji.add(kompozitori_label);
-		kompozitori_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		kompozitori_label.setFont(new Font("Tahoma", Font.PLAIN, 12));	
+		
+		JButton btnPromijeniDetalje = new JButton("Promijeni detalje");
+		btnPromijeniDetalje.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnPromijeniDetalje.setBounds(116, 325, 127, 29);
+		panel_detalji.add(btnPromijeniDetalje);
+		btnPromijeniDetalje.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if(table.getSelectedRow() == -1 && pjesme.size() > 0)
+						table.setRowSelectionInterval(0, 0);
+					else if(table.getSelectedRow() == -1 || pjesme.size() < 1)
+						return;
+					OsobaFunkcijaDialog dialog = new OsobaFunkcijaDialog(model.getRow(table.getSelectedRow()),funkcije, sve_osobe);
+					dialog.setTitle("Izmijeni detalje");
+					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+					if (dialog.command == "OK") 
+						dohvatiDodatneInformacije();					
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});		
 		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				try {
 					if (!e.getValueIsAdjusting()) 
-						loadAdditionalInfo();
+						dohvatiDodatneInformacije();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -215,8 +245,9 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		if(pjesme.size() > 0)
 			table.setRowSelectionInterval(0, 0);
 	}
-	
-	public void loadAdditionalInfo() throws SQLException {
+
+
+	public void dohvatiDodatneInformacije() throws SQLException {
 		var row = table.getSelectedRow();
 		if(row < 0)
 			return;
@@ -265,7 +296,14 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		tekstopisci_label.setText(tekstopisci);
 		producenti_label.setText(producenti);
 	}
-
+	
+	public void dodajUTabelu(List<Pjesma> pjesme, PjesmaTable model) {
+		model.clearData();
+		for (Pjesma pjesma : pjesme) {
+			model.addRow(pjesma);
+		}
+	}
+	
 	@Override
 	public void componentResized(ComponentEvent e) {
 		// TODO Auto-generated method stub
@@ -286,12 +324,5 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 	public void componentHidden(ComponentEvent e) {
 		// TODO Auto-generated method stub
 
-	}
-
-	public void addToTable(List<Pjesma> pjesme, PjesmaTable model) {
-		model.clearData();
-		for (Pjesma pjesma : pjesme) {
-			model.addRow(pjesma);
-		}
 	}
 }

@@ -25,15 +25,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import entiteti.Album;
 import entiteti.Izvodjac;
 import entiteti.Pjesma;
-import modeli.IzvodjacListRender;
+import modeli.OsobaListRender;
 
-public class osobaPjesmaDialog extends JDialog{
+public class PjesmaDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtNaziv;
@@ -54,7 +55,7 @@ public class osobaPjesmaDialog extends JDialog{
 	 * @param pjesma Input argument
 	 * @throws SQLException
 	 */
-	public osobaPjesmaDialog(Pjesma pjesma, List<Izvodjac> izvodjaci) throws SQLException {
+	public PjesmaDialog(Pjesma pjesma, List<Izvodjac> izvodjaci) throws SQLException {
 		inicijalizirajListe(izvodjaci);
 		albumi = Album.DohvatiAlbume();
 
@@ -123,7 +124,7 @@ public class osobaPjesmaDialog extends JDialog{
 		listSelektovaniIzvodjaci.setBackground(SystemColor.menu);
 		listSelektovaniIzvodjaci.setBounds(190, 149, 127, 148);
 		contentPanel.add(listSelektovaniIzvodjaci);
-		listSelektovaniIzvodjaci.setCellRenderer(new IzvodjacListRender());
+		listSelektovaniIzvodjaci.setCellRenderer(new OsobaListRender());
 
 		JLabel lblIzabraniIzvodjaci = new JLabel("Izabrani izvođači");
 		lblIzabraniIzvodjaci.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -154,7 +155,7 @@ public class osobaPjesmaDialog extends JDialog{
 		scrollPane.setViewportView(listDostupniIzvodjaci);
 		listDostupniIzvodjaci.setBorder(null);
 		listDostupniIzvodjaci.setBackground(SystemColor.control);
-		listDostupniIzvodjaci.setCellRenderer(new IzvodjacListRender());
+		listDostupniIzvodjaci.setCellRenderer(new OsobaListRender());
 		unselectIzvodjac.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -179,7 +180,7 @@ public class osobaPjesmaDialog extends JDialog{
 				id_izvodjaci = napraviIdNiz();
 				String provjera = provjeriInformacije();
 				if (provjera == "")
-					osobaPjesmaDialog.this.dispose();
+					PjesmaDialog.this.dispose();
 				else
 					JOptionPane.showMessageDialog(new JFrame(), provjera, "Greška u unosu", JOptionPane.ERROR_MESSAGE);
 
@@ -191,7 +192,7 @@ public class osobaPjesmaDialog extends JDialog{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				command = "Cancel";
-				osobaPjesmaDialog.this.dispose();
+				PjesmaDialog.this.dispose();
 			}
 		});
 	}

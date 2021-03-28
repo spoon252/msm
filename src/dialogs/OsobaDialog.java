@@ -24,7 +24,7 @@ import org.jdatepicker.impl.UtilDateModel;
 import dodaci.DateLabelFormatter;
 import entiteti.Osoba;
 
-public class osobaDialog extends JDialog {
+public class OsobaDialog extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtIme;
 	private JTextField txtPrezime;
@@ -38,7 +38,7 @@ public class osobaDialog extends JDialog {
 	 * @param pjesma Input argument
 	 * @throws SQLException 
 	 */
-	public osobaDialog(Osoba osoba) throws SQLException {	
+	public OsobaDialog(Osoba osoba) throws SQLException {	
 		if(osoba != null)
 			this._osoba = osoba;
 		setSize(333, 232);
@@ -99,7 +99,7 @@ public class osobaDialog extends JDialog {
 				_osoba.setIme(txtIme.getText());
 				_osoba.setPrezime(txtPrezime.getText());
 				_osoba.setDatumRodjenja((Date) datePicker.getModel().getValue());
-				osobaDialog.this.dispose();
+				OsobaDialog.this.dispose();
 			}			
 		});
 
@@ -108,7 +108,7 @@ public class osobaDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				command = "Cancel";
-				osobaDialog.this.dispose();
+				OsobaDialog.this.dispose();
 			}					
 		});		
 }
