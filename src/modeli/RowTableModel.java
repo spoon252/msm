@@ -168,6 +168,7 @@ abstract class RowTableModel<T> extends AbstractTableModel
 	
 	public void clearData() {
 		this.modelData.clear();
+		fireTableDataChanged();
 	}
 
 	/**

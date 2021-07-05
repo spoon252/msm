@@ -53,7 +53,7 @@ public class Album {
 		return this.idAlbum +" "+this.naziv + " " + this.godina;				
 	}
 	
-	public static List<Album> DohvatiAlbume() throws SQLException {
+	public static List<Album> dohvatiAlbume() throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "SELECT id_album, naziv, godina from music_studio.album";
 		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -68,7 +68,7 @@ public class Album {
 		return albumi;
 	}
 	
-	public static Album DodajAlbum (Album album) throws SQLException {
+	public static Album dodajAlbum (Album album) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "INSERT INTO Album(naziv, godina) VALUES (?, ?)";
 		PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -83,7 +83,7 @@ public class Album {
 		return album;
 	}
 	
-	public static int IzbrisiAlbum (int id) throws SQLException {
+	public static int izbrisiAlbum (int id) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "DELETE FROM Album WHERE id_album = ?";
 		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -93,7 +93,7 @@ public class Album {
 		return id;
 	}
 	
-	public static void DodajIzvodjaceZaAlbum (int id, List<Integer> izvodjaci) throws SQLException {
+	public static void dodajIzvodjaceZaAlbum (int id, List<Integer> izvodjaci) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "INSERT INTO izvodjacalbum(id_izvodjac, id_album) VALUES (?, ?);";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -106,7 +106,7 @@ public class Album {
 		con.close();
 	}
 	
-	public static void IzbrisiIzvodjaceZaAlbum (int id) throws SQLException {
+	public static void izbrisiIzvodjaceZaAlbum (int id) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "DELETE FROM izvodjacalbum WHERE id_album = ?;";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -115,7 +115,7 @@ public class Album {
 		con.close();
 	}
 	
-	public static Album IzmijeniAlbum (Album album) throws SQLException {
+	public static Album izmijeniAlbum (Album album) throws SQLException {
 		var con = DatabaseConnector.getConnection();		
 		String query = "UPDATE Album SET naziv = ?, godina = ? WHERE id_album = ?";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -127,7 +127,7 @@ public class Album {
 		return album;
 	}
 	
-	public static Album FilterById(int id, List<Album> albums) {
+	public static Album filterById(int id, List<Album> albums) {
 	    for(Album album : albums) {
 	        if(album.getIdAlbum() == id) {
 	            return album;

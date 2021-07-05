@@ -33,7 +33,7 @@ public class Funkcija {
 			return this.naziv_funkcije;
 	}
 
-	public static List<Funkcija> DohvatiFunkcije() throws SQLException {
+	public static List<Funkcija> dohvatiFunkcije() throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "SELECT naziv_funkcije, komentar FROM music_studio.funkcija";
 		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);

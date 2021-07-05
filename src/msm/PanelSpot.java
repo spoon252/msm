@@ -13,35 +13,50 @@ import javax.swing.JTable;
 
 import dialogs.OsobaFunkcijaDialog;
 import dialogs.PjesmaDialog;
+import dialogs.SpotDialog;
+import dodaci.PomocneFunkcije;
 import entiteti.Funkcija;
 import entiteti.Izvodjac;
 import entiteti.Osoba;
 import entiteti.Pjesma;
+import entiteti.Spot;
 import modeli.PjesmaTable;
+import modeli.SpotTable;
 
 import java.awt.Dialog;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.SwingConstants;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Cursor;
 
-public class PanelPjesma extends JPanel implements ComponentListener {
+public class PanelSpot extends JPanel implements ComponentListener {
 	private JTable table;
-	private PjesmaTable model = new PjesmaTable();
+	private SpotTable model = new SpotTable();
 	private List<Izvodjac> list_izvodjaci;
 	private List<Osoba> list_osobe;
 	private List<Funkcija> funkcije;
 	private JLabel izvodjaci_label;
-	private JLabel aranzeri_label;
+	private JLabel reziseri_label;
 	private JLabel producenti_label;
-	private JLabel tekstopisci_label;
-	private JLabel kompozitori_label;
+	private JLabel lokacija_label;
+	private JLabel glumci_label;
 
-	public PanelPjesma() throws SQLException {
-		System.out.print("csasd");
+	public PanelSpot() throws SQLException {
+		System.out.print("csasd spot");
+
 		setBorder(null);
 		model.setModelEditable(false);
 		addComponentListener(this);
@@ -53,32 +68,32 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		tableScrollPane.setViewportView(table);
 		table.setBounds(10, 0, 672, 413);
 		table.getColumnModel().getColumn(2).setMaxWidth(75);
-		// dohvati sve pjesme i popuni tabelu
-		List<Pjesma> pjesme = Pjesma.getPjesme();
-		dodajUTabelu(pjesme, model);
+		// dohvati sve spotove i popuni tabelu
+		List<Spot> spotovi = Spot.dohvatiSpotove();
+		dodajUTabelu(spotovi, model);
 		this.funkcije = Funkcija.dohvatiFunkcije();
 		List<Osoba> sve_osobe = Osoba.dohvatiSve();
-		JButton btnAddPjesma = new JButton("Dodaj");
-		btnAddPjesma.setBounds(70, 387, 67, 29);
-		btnAddPjesma.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		add(btnAddPjesma);
-		// DODAJ, OBRISI I IZMIJENI PJESMU - DIALOG
-		btnAddPjesma.addActionListener(new ActionListener() {
+		JButton btnAdd = new JButton("Dodaj");
+		btnAdd.setBounds(70, 387, 67, 29);
+		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		add(btnAdd);
+		//DODAJ, OBRISI I IZMIJENI SPOT - DIALOG
+		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					PjesmaDialog dialog = new PjesmaDialog(null, null);
-					dialog.setTitle("Dodaj pjesmu");
+					SpotDialog dialog = new SpotDialog(null, null);
+					dialog.setTitle("Dodaj spot");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						Pjesma dodana_pjesma = Pjesma.dodajPjesmu(dialog._pjesma);
-						if (dodana_pjesma != null) {
-							model.addRow(dodana_pjesma);
-							pjesme.add(dodana_pjesma);
-							Pjesma.dodajIzvodjaceZaPjesmu(dodana_pjesma.getIdPjesma(), dialog.id_izvodjaci);
-							table.setRowSelectionInterval(pjesme.size() - 1, pjesme.size() - 1);
+						Spot dodano = Spot.dodajSpot(dialog._spot);
+						if (dodano != null) {
+							model.addRow(dodano);
+							spotovi.add(dodano);
+							Spot.dodajIzvodjaceZaSpot(dodano.getIdSpot(), dialog.id_izvodjaci);
+							table.setRowSelectionInterval(spotovi.size() - 1, spotovi.size() - 1);
 						}
 					}
 
@@ -88,23 +103,23 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 			}
 		});
 
-		JButton btnIzbrisiPjesmu = new JButton("Izbriši");
-		btnIzbrisiPjesmu.setBounds(251, 387, 79, 29);
-		btnIzbrisiPjesmu.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		add(btnIzbrisiPjesmu);
-		btnIzbrisiPjesmu.addActionListener(new ActionListener() {
+		JButton btnIzbrisi = new JButton("Izbriši");
+		btnIzbrisi.setBounds(251, 387, 79, 29);
+		btnIzbrisi.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		add(btnIzbrisi);
+		btnIzbrisi.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (table.getSelectedRow() == -1 && pjesme.size() > 0)
+					if (table.getSelectedRow() == -1 && spotovi.size() > 0)
 						table.setRowSelectionInterval(0, 0);
-					else if (table.getSelectedRow() == -1 || pjesme.size() < 1)
+					else if (table.getSelectedRow() == -1 || spotovi.size() < 1)
 						return;
 					int selectedRow = table.getSelectedRow();
-					int removed = Pjesma.IzbrisiPjesmu(model.getRow(selectedRow).getIdPjesma());
+					int removed = Spot.izbrisiSpot(model.getRow(selectedRow).getIdSpot());
 					if (removed > 0) {
 						model.removeRows(selectedRow);
-						pjesme.remove(selectedRow);
+						spotovi.remove(selectedRow);
 						if (model.getRowCount() > 0)
 							table.setRowSelectionInterval(0, 0);
 					}
@@ -114,29 +129,29 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 			}
 		});
 
-		JButton btnIzmijeniPjesmu = new JButton("Izmijeni");
-		btnIzmijeniPjesmu.setBounds(157, 387, 77, 29);
-		btnIzmijeniPjesmu.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		add(btnIzmijeniPjesmu);
-		btnIzmijeniPjesmu.addActionListener(new ActionListener() {
+		JButton btnIzmijeni = new JButton("Izmijeni");
+		btnIzmijeni.setBounds(157, 387, 77, 29);
+		btnIzmijeni.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		add(btnIzmijeni);
+		btnIzmijeni.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (table.getSelectedRow() == -1 && pjesme.size() > 0)
+					if (table.getSelectedRow() == -1 && spotovi.size() > 0)
 						table.setRowSelectionInterval(0, 0);
-					else if (table.getSelectedRow() == -1 || pjesme.size() < 1)
+					else if (table.getSelectedRow() == -1 || spotovi.size() < 1)
 						return;
-					PjesmaDialog dialog = new PjesmaDialog(model.getRow(table.getSelectedRow()), list_izvodjaci);
+					SpotDialog dialog = new SpotDialog(model.getRow(table.getSelectedRow()), list_izvodjaci);
 					dialog.setTitle("Izmijeni pjesmu");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						Pjesma izmijenjena_pjesma = Pjesma.izmijeniPjesmu(dialog._pjesma);
-						if (izmijenjena_pjesma != null) {
-							model.replaceRow(table.getSelectedRow(), izmijenjena_pjesma);
-							Pjesma.izbrisiIzvodjaceZaPjesmu(izmijenjena_pjesma.getIdPjesma());
-							Pjesma.dodajIzvodjaceZaPjesmu(izmijenjena_pjesma.getIdPjesma(), dialog.id_izvodjaci);
+						Spot izmijenjeno = Spot.izmijeniSpot(dialog._spot);
+						if (izmijenjeno != null) {
+							model.replaceRow(table.getSelectedRow(), izmijenjeno);
+							Spot.izbrisiIzvodjaceZaSpot(izmijenjeno.getIdSpot());
+							Spot.dodajIzvodjaceZaSpot(izmijenjeno.getIdSpot(), dialog.id_izvodjaci);
 							dohvatiDodatneInformacije();
 						}
 					}
@@ -158,27 +173,27 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		add(panel_detalji);
 		panel_detalji.setLayout(null);
 
-		JLabel lblAraneri = new JLabel("Aranžeri:");
-		lblAraneri.setBounds(9, 201, 54, 15);
-		panel_detalji.add(lblAraneri);
-		lblAraneri.setFont(new Font("Tahoma", Font.BOLD, 12));
+		JLabel lblReziseri = new JLabel("Režiseri");
+		lblReziseri.setBounds(10, 149, 54, 15);
+		panel_detalji.add(lblReziseri);
+		lblReziseri.setFont(new Font("Tahoma", Font.BOLD, 12));
 
-		JLabel lblProducent = new JLabel("Producenti:");
-		lblProducent.setBounds(9, 149, 74, 15);
+		JLabel lblProducent = new JLabel("Producenti");
+		lblProducent.setBounds(10, 94, 74, 15);
 		panel_detalji.add(lblProducent);
 		lblProducent.setFont(new Font("Tahoma", Font.BOLD, 12));
 
-		JLabel lblTekstopisci = new JLabel("Tekstopisci:");
-		lblTekstopisci.setBounds(10, 306, 90, 14);
-		panel_detalji.add(lblTekstopisci);
-		lblTekstopisci.setFont(new Font("Tahoma", Font.BOLD, 12));
+		JLabel lblLokacija = new JLabel("Lokacija");
+		lblLokacija.setBounds(10, 275, 90, 14);
+		panel_detalji.add(lblLokacija);
+		lblLokacija.setFont(new Font("Tahoma", Font.BOLD, 12));
 
-		JLabel lblKompozitori = new JLabel("Kompozitori:");
-		lblKompozitori.setBounds(10, 251, 90, 14);
-		panel_detalji.add(lblKompozitori);
-		lblKompozitori.setFont(new Font("Tahoma", Font.BOLD, 12));
+		JLabel lblGlumci = new JLabel("Glumci");
+		lblGlumci.setBounds(10, 212, 90, 14);
+		panel_detalji.add(lblGlumci);
+		lblGlumci.setFont(new Font("Tahoma", Font.BOLD, 12));
 
-		JLabel lblNewLabel = new JLabel("Izvođači: ");
+		JLabel lblNewLabel = new JLabel("Izvođači");
 		lblNewLabel.setBounds(10, 36, 67, 14);
 		panel_detalji.add(lblNewLabel);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -188,50 +203,74 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		panel_detalji.add(lblNewLabel_1);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 
-		tekstopisci_label = new JLabel("");
-		tekstopisci_label.setVerticalAlignment(SwingConstants.TOP);
-		tekstopisci_label.setBounds(86, 305, 250, 34);
-		panel_detalji.add(tekstopisci_label);
-		tekstopisci_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lokacija_label = new JLabel("");
+		lokacija_label.setBackground(Color.WHITE);
+		lokacija_label.setVerticalAlignment(SwingConstants.TOP);
+		lokacija_label.setBounds(10, 300, 311, 34);
+		panel_detalji.add(lokacija_label);
+		lokacija_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 		producenti_label = new JLabel("");
+		producenti_label.setBackground(Color.WHITE);
 		producenti_label.setVerticalAlignment(SwingConstants.TOP);
-		producenti_label.setBounds(93, 149, 247, 34);
+		producenti_label.setBounds(10, 114, 311, 34);
 		panel_detalji.add(producenti_label);
 		producenti_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 		izvodjaci_label = new JLabel("");
-		izvodjaci_label.setBounds(73, 36, 260, 14);
+		izvodjaci_label.setBounds(10, 49, 311, 41);
 		panel_detalji.add(izvodjaci_label);
 		izvodjaci_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
-		aranzeri_label = new JLabel("");
-		aranzeri_label.setVerticalAlignment(SwingConstants.TOP);
-		aranzeri_label.setBounds(76, 201, 260, 25);
-		panel_detalji.add(aranzeri_label);
-		aranzeri_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		reziseri_label = new JLabel("");
+		reziseri_label.setBackground(Color.WHITE);
+		reziseri_label.setVerticalAlignment(SwingConstants.TOP);
+		reziseri_label.setBounds(10, 163, 311, 38);
+		panel_detalji.add(reziseri_label);
+		reziseri_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
-		kompozitori_label = new JLabel("");
-		kompozitori_label.setVerticalAlignment(SwingConstants.TOP);
-		kompozitori_label.setBounds(98, 251, 238, 28);
-		panel_detalji.add(kompozitori_label);
-		kompozitori_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		glumci_label = new JLabel("");
+		glumci_label.setBackground(Color.WHITE);
+		glumci_label.setVerticalAlignment(SwingConstants.TOP);
+		glumci_label.setBounds(10, 237, 311, 28);
+		panel_detalji.add(glumci_label);
+		glumci_label.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
+		JLabel lblLink = new JLabel("Otvori video u pretraživaču");
+		lblLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblLink.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				if(row<0)
+					return;
+				String lok = model.getRow(row).getYoutubeLink();
+				if(lok == "" || lok == null)
+					JOptionPane.showMessageDialog(new JFrame(), "Link je prazan!", "Greška", JOptionPane.ERROR_MESSAGE);
+				else
+					PomocneFunkcije.openLinkInBrowser(lok);
+			}
+		});
+		lblLink.setForeground(Color.BLUE);
+		lblLink.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblLink.setBounds(79, 345, 194, 14);
+		panel_detalji.add(lblLink);
 		btnPromijeniDetalje.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (table.getSelectedRow() == -1 && pjesme.size() > 0)
+					if (table.getSelectedRow() == -1 && spotovi.size() > 0)
 						table.setRowSelectionInterval(0, 0);
-					else if (table.getSelectedRow() == -1 || pjesme.size() < 1)
+					else if (table.getSelectedRow() == -1 || spotovi.size() < 1)
 						return;
-					OsobaFunkcijaDialog dialog = new OsobaFunkcijaDialog(model.getRow(table.getSelectedRow()).getIdPjesma(), funkcije,
+					OsobaFunkcijaDialog dialog = new OsobaFunkcijaDialog(model.getRow(table.getSelectedRow()).getIdSpot(), funkcije,
 							sve_osobe);
 					dialog.setTitle("Izmijeni detalje");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						Osoba.azurirajOsobeZaPjesmu(dialog.selektovane_osobe,
+						Osoba.azurirajOsobeZaSpot(dialog.selektovane_osobe,
 								model.getRow(table.getSelectedRow()).getIdPjesma());
 						dohvatiDodatneInformacije();
 					}
@@ -252,7 +291,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 				}
 			}
 		});
-		if (pjesme.size() > 0)
+		if (spotovi.size() > 0)
 			table.setRowSelectionInterval(0, 0);
 	}
 
@@ -260,9 +299,10 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		var row = table.getSelectedRow();
 		if (row < 0)
 			return;
-		int selected = model.getRow(row).getIdPjesma();
-		list_izvodjaci = Izvodjac.dohvatiIzvodjacePoPjesmi(selected);
-		list_osobe = Osoba.dohvatiSveZaPjesmu(selected);
+		int selected = model.getRow(row).getIdSpot();
+		lokacija_label.setText(model.getRow(row).getLokacija());
+		list_izvodjaci = Izvodjac.dohvatiIzvodjacePoSpotu(selected);
+		list_osobe = Osoba.dohvatiSveZaSpot(selected);
 		popuniDodatneInformacije();
 		String labeltext = "";
 		for (Izvodjac izvodjac : list_izvodjaci) {
@@ -275,41 +315,35 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 	}
 
 	public void popuniDodatneInformacije() {
-		String aranzeri = "";
-		String kompozitori = "";
+		String reziseri = "";
+		String glumci = "";
 		String producenti = "";
-		String tekstopisci = "";
-		aranzeri_label.setText("");
-		kompozitori_label.setText("");
-		tekstopisci_label.setText("");
+		reziseri_label.setText("");
+		glumci_label.setText("");
 		producenti_label.setText("");
 		for (Osoba osoba : list_osobe)
 			switch (osoba.getFunkcija()) {
-			case "Aranzer":
-				aranzeri += (osoba.getIme() + " " + osoba.getPrezime()) + "; ";
+			case "Reziser":
+				reziseri += (osoba.getIme() + " " + osoba.getPrezime()) + "; ";
 				break;
-			case "Kompozitor":
-				kompozitori += (osoba.getIme() + " " + osoba.getPrezime()) + "; ";
+			case "Glumac":
+				glumci += (osoba.getIme() + " " + osoba.getPrezime()) + "; ";
 				break;
 			case "Producent":
 				producenti += (osoba.getIme() + " " + osoba.getPrezime()) + "; ";
 				break;
-			case "Tekstopisac":
-				tekstopisci += (osoba.getIme() + " " + osoba.getPrezime()) + "; ";
-				break;
 			default:
 				break;
 			}
-		aranzeri_label.setText(aranzeri);
-		kompozitori_label.setText(kompozitori);
-		tekstopisci_label.setText(tekstopisci);
+		reziseri_label.setText(reziseri);
+		glumci_label.setText(glumci);
 		producenti_label.setText(producenti);
 	}
 
-	public void dodajUTabelu(List<Pjesma> pjesme, PjesmaTable model) {
+	public void dodajUTabelu(List<Spot> spotovi, SpotTable model) {
 		model.clearData();
-		for (Pjesma pjesma : pjesme) {
-			model.addRow(pjesma);
+		for (Spot spot : spotovi) {
+			model.addRow(spot);
 		}
 	}
 
@@ -334,4 +368,5 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		// TODO Auto-generated method stub
 
 	}
+
 }

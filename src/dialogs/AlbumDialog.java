@@ -210,7 +210,7 @@ public class AlbumDialog extends JDialog {
 	}
 
 	private void inicijalizirajListe(List<Izvodjac> izvodjaci) throws SQLException {
-		List<Izvodjac> svi_izvodjaci = Izvodjac.DohvatiIzvodjace();
+		List<Izvodjac> svi_izvodjaci = Izvodjac.dohvatiIzvodjace();
 		if (izvodjaci == null) {
 			list_available.addAll(svi_izvodjaci);
 		} else {

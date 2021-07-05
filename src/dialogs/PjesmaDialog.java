@@ -25,7 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
@@ -57,7 +56,7 @@ public class PjesmaDialog extends JDialog {
 	 */
 	public PjesmaDialog(Pjesma pjesma, List<Izvodjac> izvodjaci) throws SQLException {
 		inicijalizirajListe(izvodjaci);
-		albumi = Album.DohvatiAlbume();
+		albumi = Album.dohvatiAlbume();
 
 		setSize(343, 380);
 		setLocationRelativeTo(null);
@@ -99,7 +98,7 @@ public class PjesmaDialog extends JDialog {
 		
 		if (pjesma != null) {
 			_pjesma = pjesma;
-			comboAlbumi.setSelectedItem(Album.FilterById(_pjesma.getIdAlbum(), albumi));
+			comboAlbumi.setSelectedItem(Album.filterById(_pjesma.getIdAlbum(), albumi));
 		}
 
 		txtNaziv = new JTextField();
@@ -214,7 +213,7 @@ public class PjesmaDialog extends JDialog {
 	}
 
 	private void inicijalizirajListe(List<Izvodjac> izvodjaci) throws SQLException {
-		List<Izvodjac> svi_izvodjaci = Izvodjac.DohvatiIzvodjace();
+		List<Izvodjac> svi_izvodjaci = Izvodjac.dohvatiIzvodjace();
 		if (izvodjaci == null) {
 			list_available.addAll(svi_izvodjaci);
 		} else {

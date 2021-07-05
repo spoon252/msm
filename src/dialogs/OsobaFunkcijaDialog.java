@@ -33,6 +33,7 @@ import entiteti.Pjesma;
 import modeli.OsobaListRender;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.Color;
 
 public class OsobaFunkcijaDialog extends JDialog {
 
@@ -44,15 +45,10 @@ public class OsobaFunkcijaDialog extends JDialog {
 	private DefaultListModel<Osoba> list_available = new DefaultListModel<Osoba>();
 	private JList listDostupneOsobe;
 	private JList listSelektovaneOsobe;
-	Hashtable<String, List<Integer>> selektovane_osobe = new Hashtable<String, List<Integer>>();
+	public Hashtable<String, List<Integer>> selektovane_osobe = new Hashtable<String, List<Integer>>();
 
-	/***
-	 * 
-	 * @param pjesma Input argument
-	 * @throws SQLException
-	 */
-	public OsobaFunkcijaDialog(Pjesma pjesma, List<Funkcija> funkcije, List<Osoba> sve_osobe) throws SQLException {
-		inicijalizirajMapu(pjesma.idPjesma, funkcije);
+	public OsobaFunkcijaDialog(int id, List<Funkcija> funkcije, List<Osoba> sve_osobe) throws SQLException {
+		inicijalizirajMapu(id, funkcije);
 		setSize(343, 380);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -60,10 +56,10 @@ public class OsobaFunkcijaDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		listDostupneOsobe = new JList(list_available);
-		listDostupneOsobe.setBounds(10, 78, 125, 219);
+		listDostupneOsobe.setBounds(10, 78, 124, 219);
 		contentPanel.add(listDostupneOsobe);
-		listDostupneOsobe.setBorder(null);
-		listDostupneOsobe.setBackground(SystemColor.control);
+		listDostupneOsobe.setBorder(new LineBorder(new Color(0, 0, 0)));
+		listDostupneOsobe.setBackground(SystemColor.menu);
 		listDostupneOsobe.setCellRenderer(new OsobaListRender());
 
 		JLabel lblFunkcija = new JLabel("Funkcija");
@@ -89,15 +85,20 @@ public class OsobaFunkcijaDialog extends JDialog {
 		comboFunkcije.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent event) {
-				if (event.getStateChange() == ItemEvent.SELECTED) {
+				   if(event.getStateChange() == ItemEvent.DESELECTED) 
+				   {
+					   Funkcija f = (Funkcija) event.getItem();
+					   SnimiTrenutnoStanje(f.getNazivFunkcije());
+				   }
+				if (event.getStateChange() == ItemEvent.SELECTED) {					
 					Funkcija f = (Funkcija) event.getItem();
-					FiltrirajSelektovaneOsobe(f.getNazivFunkcije(), sve_osobe);
+					filtrirajSelektovaneOsobe(f.getNazivFunkcije(), sve_osobe);
 				}
 			}
 		});
 
 		comboFunkcije.setSelectedItem(funkcije.get(0));
-		FiltrirajSelektovaneOsobe(funkcije.get(0).getNazivFunkcije(), sve_osobe);
+		filtrirajSelektovaneOsobe(funkcije.get(0).getNazivFunkcije(), sve_osobe);
 		JLabel lblIOsobe = new JLabel("Dostupne osobe");
 		lblIOsobe.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblIOsobe.setBounds(17, 53, 102, 14);
@@ -130,10 +131,6 @@ public class OsobaFunkcijaDialog extends JDialog {
 		unselectOsoba.setMargin(new Insets(1, 1, 1, 1));
 		unselectOsoba.setBounds(144, 126, 36, 22);
 		contentPanel.add(unselectOsoba);
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 78, 127, 219);
-		contentPanel.add(scrollPane);
 		unselectOsoba.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -150,6 +147,8 @@ public class OsobaFunkcijaDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				command = "OK";
+				Funkcija f = (Funkcija) comboFunkcije.getSelectedItem();
+				SnimiTrenutnoStanje(f.getNazivFunkcije());
 				OsobaFunkcijaDialog.this.dispose();
 			}
 		});
@@ -164,7 +163,7 @@ public class OsobaFunkcijaDialog extends JDialog {
 		});
 	}
 
-	private void FiltrirajSelektovaneOsobe(String funkcija, List<Osoba> osobe) {
+	private void filtrirajSelektovaneOsobe(String funkcija, List<Osoba> osobe) {
 		list_available.removeAllElements();
 		list_selected.removeAllElements();
 		List<Integer> osobe_id = this.selektovane_osobe.get(funkcija);
@@ -173,10 +172,18 @@ public class OsobaFunkcijaDialog extends JDialog {
 			return;
 		if (!osobe_id.isEmpty())
 			for (Osoba osoba : osobe)
-				if (!osobe_id.contains(osoba.getIdosoba())) {					
+				if (osobe_id.contains(osoba.getIdosoba())) {					
 					list_selected.addElement(osoba);
 					list_available.remove(list_available.indexOf(osoba));
 				}			
+	}
+	
+	private void SnimiTrenutnoStanje(String funkcija) {		
+		if(list_selected.isEmpty())
+			this.selektovane_osobe.put(funkcija, new ArrayList());
+		else 
+			this.selektovane_osobe.put(funkcija, napraviNizSelektovanihId());
+		
 	}
 
 	private void selektuj() {
@@ -200,22 +207,22 @@ public class OsobaFunkcijaDialog extends JDialog {
 			return;
 		for (Funkcija f : funkcije)
 			this.selektovane_osobe.put(f.naziv_funkcije, new ArrayList());
-		List<Osoba> osobe = Osoba.DohvatiSveZaPjesmu(id);
+		List<Osoba> osobe = Osoba.dohvatiSveZaPjesmu(id);
 		for (Osoba osoba : osobe)
-			this.DodajUMapu(osoba);
+			this.dodajUMapu(osoba);
 	}
 
-	private void DodajUMapu(Osoba osoba) {
+	private void dodajUMapu(Osoba osoba) {
 		List<Integer> value = this.selektovane_osobe.get(osoba.getFunkcija());
 		value.add(osoba.getIdosoba());
 		this.selektovane_osobe.put(osoba.getFunkcija(), value);
 	}
 
-	private List<Integer> napraviIdNiz() {
+	private List<Integer> napraviNizSelektovanihId() {
 		List<Integer> result = new ArrayList<Integer>();
 		var arr = list_selected.toArray();
 		for (int i = 0; i < arr.length; i++)
-			result.add(((Izvodjac) arr[i]).getIdIzvodjac());
+			result.add(((Osoba) arr[i]).getIdosoba());
 		return result;
 	}
 }

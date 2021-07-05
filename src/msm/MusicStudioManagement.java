@@ -1,14 +1,10 @@
 package msm;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 
 public class MusicStudioManagement extends JFrame{
@@ -45,7 +41,7 @@ public class MusicStudioManagement extends JFrame{
 		contentPane.setLayout(null);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(10, 5, 775, 455);
+		tabbedPane.setBounds(0, 0, 794, 471);
 		contentPane.add(tabbedPane);
 		
 		PanelPjesma panelPjesma = new PanelPjesma();
@@ -56,5 +52,9 @@ public class MusicStudioManagement extends JFrame{
 		tabbedPane.addTab("Izvođači", null, panelIzvodjac, null);
 		PanelOsoba panelOsoba = new PanelOsoba();
 		tabbedPane.addTab("Osobe", null, panelOsoba, null);
+		
+		PanelSpot panelSpot = new PanelSpot();
+		panelSpot.setToolTipText("Spotovi");
+		tabbedPane.addTab("Spotovi", null, panelSpot, null);
 		}
 }

@@ -40,7 +40,7 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 		table.getColumnModel().getColumn(0).setMaxWidth(200);
 		table.getColumnModel().getColumn(1).setMaxWidth(200);
 		//table.getColumnModel().getColumn(2).setMaxWidth(165);
-		List<Osoba> osobe = Osoba.DohvatiSve();
+		List<Osoba> osobe = Osoba.dohvatiSve();
 		addToTable(osobe, model);
 		JButton btnIzmijeni = new JButton("Izmijeni");
 		btnIzmijeni.setBounds(229, 372, 89, 23);
@@ -55,7 +55,7 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						Osoba rezultat = Osoba.Izmijeni(dialog._osoba);
+						Osoba rezultat = Osoba.izmijeni(dialog._osoba);
 					if (rezultat != null) {
 						model.replaceRow(table.getSelectedRow(), rezultat);
 					}
@@ -73,7 +73,7 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int removed = Osoba.Izbrisi(model.getRow(table.getSelectedRow()).getIdosoba());
+					int removed = Osoba.izbrisi(model.getRow(table.getSelectedRow()).getIdosoba());
 					if (removed > 0) {
 						model.removeRows(table.getSelectedRow());
 						if (model.getRowCount() > 0)
@@ -100,7 +100,7 @@ public class PanelOsoba extends JPanel implements ComponentListener {
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						Osoba dodan_izvodjac = Osoba.Dodaj(dialog._osoba);
+						Osoba dodan_izvodjac = Osoba.dodaj(dialog._osoba);
 						if (dodan_izvodjac != null) {
 							model.addRow(dodan_izvodjac);
 						}

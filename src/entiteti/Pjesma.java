@@ -76,7 +76,7 @@ public class Pjesma {
 				
 	}
 	
-	public static List<Pjesma> GetPjesme() throws SQLException {
+	public static List<Pjesma> getPjesme() throws SQLException {
 		List<Pjesma> pjesme = new ArrayList<Pjesma>();
 		var con = DatabaseConnector.getConnection();
 		String query = "SELECT PJ.id_pjesma, PJ.id_album" + ",AL.naziv as album" + ",PJ.naziv" + ",PJ.trajanje"
@@ -93,7 +93,7 @@ public class Pjesma {
 		return pjesme;
 	}
 	
-	public static Pjesma DodajPjesmu (Pjesma pjesma) throws SQLException {
+	public static Pjesma dodajPjesmu (Pjesma pjesma) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "INSERT INTO Pjesma(id_album, naziv, trajanje) VALUES (?, ?, ?)";
 		PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -109,7 +109,7 @@ public class Pjesma {
 		return pjesma;
 	}
 	
-	public static void DodajIzvodjaceZaPjesmu (int id_pjesma, List<Integer> izvodjaci) throws SQLException {
+	public static void dodajIzvodjaceZaPjesmu (int id_pjesma, List<Integer> izvodjaci) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "INSERT INTO izvodjacpjesma(id_izvodjac, id_pjesma) VALUES (?, ?);";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -122,7 +122,7 @@ public class Pjesma {
 		con.close();
 	}
 	
-	public static void IzbrisiIzvodjaceZaPjesmu (int id_pjesma) throws SQLException {
+	public static void izbrisiIzvodjaceZaPjesmu (int id_pjesma) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "DELETE FROM izvodjacpjesma WHERE id_pjesma = ?;";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -131,7 +131,7 @@ public class Pjesma {
 		con.close();
 	}
 	
-	public static Pjesma IzmijeniPjesmu (Pjesma pjesma) throws SQLException {
+	public static Pjesma izmijeniPjesmu (Pjesma pjesma) throws SQLException {
 		var con = DatabaseConnector.getConnection();		
 		String query = "UPDATE Pjesma SET id_album = ?, naziv = ?, trajanje = ? WHERE id_pjesma = ?";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -157,7 +157,7 @@ public class Pjesma {
 	public static List<Pjesma> DohvatiPjesmePoAlbumu(int id) throws SQLException {
 		var con = DatabaseConnector.getConnection();
 		String query = "SELECT id_pjesma" + ",id_album" + ",naziv" + ",naziv" + ",trajanje" + " FROM music_studio.pjesma"
-				+ " WHERE id_pjesma = ?";
+				+ " WHERE id_album = ?";
 		PreparedStatement ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
@@ -170,4 +170,13 @@ public class Pjesma {
 		con.close();
 		return pjesme;
 	}
+	
+	public static Pjesma filterById(int id, List<Pjesma> lista) {
+	    for(Pjesma item : lista) {
+	        if(item.getIdPjesma() == id) {
+	            return item;
+	        }
+	    }
+	    return null;
+	}	
 }

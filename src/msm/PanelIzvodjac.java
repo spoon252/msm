@@ -60,7 +60,7 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						Izvodjac rezultat = Izvodjac.IzmijeniIzvodjaca(dialog._izvodjac);
+						Izvodjac rezultat = Izvodjac.izmijeniIzvodjaca(dialog._izvodjac);
 					if (rezultat != null) {
 						model.replaceRow(table.getSelectedRow(), rezultat);
 					}
@@ -78,7 +78,7 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int removed = Izvodjac.IzbrisiIzvodjaca(model.getRow(table.getSelectedRow()).getIdIzvodjac());
+					int removed = Izvodjac.izbrisiIzvodjaca(model.getRow(table.getSelectedRow()).getIdIzvodjac());
 					if (removed > 0) {
 						model.removeRows(table.getSelectedRow());
 						if (model.getRowCount() > 0)
@@ -106,7 +106,7 @@ public class PanelIzvodjac extends JPanel implements ComponentListener {
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 					if (dialog.command == "OK") {
-						Izvodjac dodan_izvodjac = Izvodjac.DodajIzvodjaca(dialog._izvodjac);
+						Izvodjac dodan_izvodjac = Izvodjac.dodajIzvodjaca(dialog._izvodjac);
 						if (dodan_izvodjac != null) {
 							model.addRow(dodan_izvodjac);
 						}
