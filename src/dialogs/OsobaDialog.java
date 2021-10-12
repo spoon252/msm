@@ -33,11 +33,7 @@ public class OsobaDialog extends JDialog {
 	private JButton btnOtkazi = new JButton("Otkaži");
 	public String command = "";
 	ButtonGroup G = new ButtonGroup();
-	/***
-	 * 
-	 * @param pjesma Input argument
-	 * @throws SQLException 
-	 */
+
 	public OsobaDialog(Osoba osoba) throws SQLException {	
 		if(osoba != null)
 			this._osoba = osoba;

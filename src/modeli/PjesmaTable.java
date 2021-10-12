@@ -1,8 +1,6 @@
 package modeli;
 
 import java.util.Arrays;
-import java.util.List;
-
 import entiteti.Pjesma;
 
 @SuppressWarnings("serial")

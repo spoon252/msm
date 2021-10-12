@@ -244,7 +244,7 @@ public class SpotDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				command = "OK";
 				Pjesma selectedPjesma = (Pjesma) comboPjesme.getSelectedItem();
-				_spot.setLokacija(textAreaLink.getText());
+				_spot.setLokacija(txtLokacija.getText());
 				_spot.setNazivPjesme(selectedPjesma.getNaziv());
 				_spot.setIdPjesma(selectedPjesma.getIdPjesma());
 				_spot.setGodina(Integer.parseInt(txtGodina.getText()));

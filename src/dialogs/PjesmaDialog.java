@@ -49,11 +49,6 @@ public class PjesmaDialog extends JDialog {
 	private JList listSelektovaniIzvodjaci;
 	public List<Integer> id_izvodjaci;
 
-	/***
-	 * 
-	 * @param pjesma Input argument
-	 * @throws SQLException
-	 */
 	public PjesmaDialog(Pjesma pjesma, List<Izvodjac> izvodjaci) throws SQLException {
 		inicijalizirajListe(izvodjaci);
 		albumi = Album.dohvatiAlbume();

@@ -30,11 +30,6 @@ public class izvodjacDialog extends JDialog {
 	public String command = "";
 	ButtonGroup G = new ButtonGroup();
 
-	/***
-	 * 
-	 * @param pjesma Input argument
-	 * @throws SQLException 
-	 */
 	public izvodjacDialog(Izvodjac izvodjac) throws SQLException {	
 		if(izvodjac != null)
 			this._izvodjac = izvodjac;

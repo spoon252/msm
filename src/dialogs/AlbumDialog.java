@@ -13,7 +13,6 @@ import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -32,7 +31,6 @@ import entiteti.Izvodjac;
 import modeli.OsobaListRender;
 
 public class AlbumDialog extends JDialog {
-
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtNaziv;
 	private JTextField txtGodina;
@@ -47,11 +45,6 @@ public class AlbumDialog extends JDialog {
 	public List<Integer> id_izvodjaci;
 	private JTextField textField;
 
-	/***
-	 * 
-	 * @param pjesma Input argument
-	 * @throws SQLException
-	 */
 	public AlbumDialog(Album album, List<Izvodjac> izvodjaci) throws SQLException {
 		inicijalizirajListe(izvodjaci);
 		if (album != null) {
@@ -103,8 +96,7 @@ public class AlbumDialog extends JDialog {
 	                label.setText("Pogrešan unos!");
 	             }
 	          }
-	       });
-		
+	       });		
 
 		JLabel lblIzvodjac = new JLabel("Dostupni izvođači");
 		lblIzvodjac.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -238,4 +230,3 @@ public class AlbumDialog extends JDialog {
 		return "";
 	}
 }
-
