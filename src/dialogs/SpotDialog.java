@@ -68,7 +68,12 @@ public class SpotDialog extends JDialog {
 	public SpotDialog(Spot spot, List<Izvodjac> izvodjaci) throws SQLException {
 		inicijalizirajListe(izvodjaci);
 		albumi = Album.dohvatiAlbume();
-		pjesme = Pjesma.DohvatiPjesmePoAlbumu(albumi.get(0).getIdAlbum());
+		if(albumi.size() == 0) {
+			JOptionPane.showMessageDialog(new JFrame(), "Nije moguće dodati novi spot jer nijedan album nije dodan.", "Greška", JOptionPane.ERROR_MESSAGE);
+			this.btnPrihvati.setEnabled(false);
+		}
+		else
+			pjesme = Pjesma.DohvatiPjesmePoAlbumu(albumi.get(0).getIdAlbum());		
 		pjesme_model.addAll(pjesme);
 		setSize(343, 430);
 		setLocationRelativeTo(null);
@@ -165,7 +170,8 @@ public class SpotDialog extends JDialog {
 			txtLokacija.setText(spot.getLokacija());
 			textAreaLink.setText(spot.getYoutubeLink());			
 		} else {
-			comboPjesme.setSelectedIndex(0);
+			if(pjesme.size() > 0)
+				comboPjesme.setSelectedIndex(0);
 		}
 
 		JLabel lblIzvodjac = new JLabel("Dostupni izvođači");
@@ -243,6 +249,10 @@ public class SpotDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				command = "OK";
+				if(pjesme.size() == 0) {
+					JOptionPane.showMessageDialog(new JFrame(), "Nije moguće dodati novi spot jer nije izabrana nijedna pjesma.", "Greška", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				Pjesma selectedPjesma = (Pjesma) comboPjesme.getSelectedItem();
 				_spot.setLokacija(txtLokacija.getText());
 				_spot.setNazivPjesme(selectedPjesma.getNaziv());

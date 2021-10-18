@@ -52,7 +52,10 @@ public class PjesmaDialog extends JDialog {
 	public PjesmaDialog(Pjesma pjesma, List<Izvodjac> izvodjaci) throws SQLException {
 		inicijalizirajListe(izvodjaci);
 		albumi = Album.dohvatiAlbume();
-
+		if(albumi.size() == 0) {
+			JOptionPane.showMessageDialog(new JFrame(), "Nije moguće dodati novu pjesmu jer nijedan album nije dodan.", "Greška", JOptionPane.ERROR_MESSAGE);
+			this.btnPrihvati.setEnabled(false);
+		}
 		setSize(343, 380);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());

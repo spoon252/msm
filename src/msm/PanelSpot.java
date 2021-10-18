@@ -55,8 +55,6 @@ public class PanelSpot extends JPanel implements ComponentListener {
 	private JLabel glumci_label;
 
 	public PanelSpot() throws SQLException {
-		System.out.print("csasd spot");
-
 		setBorder(null);
 		model.setModelEditable(false);
 		addComponentListener(this);
@@ -71,8 +69,7 @@ public class PanelSpot extends JPanel implements ComponentListener {
 		// dohvati sve spotove i popuni tabelu
 		List<Spot> spotovi = Spot.dohvatiSpotove();
 		dodajUTabelu(spotovi, model);
-		this.funkcije = Funkcija.dohvatiFunkcije();
-		List<Osoba> sve_osobe = Osoba.dohvatiSve();
+		this.funkcije = Funkcija.dohvatiFunkcije();		
 		JButton btnAdd = new JButton("Dodaj");
 		btnAdd.setBounds(70, 387, 67, 29);
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -263,8 +260,7 @@ public class PanelSpot extends JPanel implements ComponentListener {
 						table.setRowSelectionInterval(0, 0);
 					else if (table.getSelectedRow() == -1 || spotovi.size() < 1)
 						return;
-					OsobaFunkcijaDialog dialog = new OsobaFunkcijaDialog(model.getRow(table.getSelectedRow()).getIdSpot(), funkcije,
-							sve_osobe);
+					OsobaFunkcijaDialog dialog = new OsobaFunkcijaDialog(model.getRow(table.getSelectedRow()).getIdSpot(), funkcije);
 					dialog.setTitle("Izmijeni detalje");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

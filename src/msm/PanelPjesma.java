@@ -32,8 +32,8 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 	private JTable table;
 	private PjesmaTable model = new PjesmaTable();
 	private List<Izvodjac> list_izvodjaci;
-	private List<Osoba> list_osobe;
 	private List<Funkcija> funkcije;
+	private List<Osoba> list_osobe;
 	private JLabel izvodjaci_label;
 	private JLabel aranzeri_label;
 	private JLabel producenti_label;
@@ -56,8 +56,7 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 		// dohvati sve pjesme i popuni tabelu
 		List<Pjesma> pjesme = Pjesma.getPjesme();
 		dodajUTabelu(pjesme, model);
-		this.funkcije = Funkcija.dohvatiFunkcije();
-		List<Osoba> sve_osobe = Osoba.dohvatiSve();
+		this.funkcije = Funkcija.dohvatiFunkcije();		
 		JButton btnAddPjesma = new JButton("Dodaj");
 		btnAddPjesma.setBounds(70, 387, 67, 29);
 		btnAddPjesma.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -223,9 +222,8 @@ public class PanelPjesma extends JPanel implements ComponentListener {
 					if (table.getSelectedRow() == -1 && pjesme.size() > 0)
 						table.setRowSelectionInterval(0, 0);
 					else if (table.getSelectedRow() == -1 || pjesme.size() < 1)
-						return;
-					OsobaFunkcijaDialog dialog = new OsobaFunkcijaDialog(model.getRow(table.getSelectedRow()).getIdPjesma(), funkcije,
-							sve_osobe);
+						return;					
+					OsobaFunkcijaDialog dialog = new OsobaFunkcijaDialog(model.getRow(table.getSelectedRow()).getIdPjesma(), funkcije);
 					dialog.setTitle("Izmijeni detalje");
 					dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

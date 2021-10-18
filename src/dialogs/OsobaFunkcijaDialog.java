@@ -47,7 +47,8 @@ public class OsobaFunkcijaDialog extends JDialog {
 	private JList listSelektovaneOsobe;
 	public Hashtable<String, List<Integer>> selektovane_osobe = new Hashtable<String, List<Integer>>();
 
-	public OsobaFunkcijaDialog(int id, List<Funkcija> funkcije, List<Osoba> sve_osobe) throws SQLException {
+	public OsobaFunkcijaDialog(int id, List<Funkcija> funkcije) throws SQLException {
+		List<Osoba> sve_osobe = Osoba.dohvatiSve();
 		inicijalizirajMapu(id, funkcije);
 		setSize(343, 380);
 		setLocationRelativeTo(null);
